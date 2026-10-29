@@ -1,0 +1,2689 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover, user-scalable=yes">
+<meta name="theme-color" content="#171614">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VESTORA 3D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="VESTORA 3D">
+<meta name="format-detection" content="telephone=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ==========================================================
+     RESPONSIVE MOBILE-FIRST — full audit
+     ========================================================== */
+  :root{
+    --bg:#faf8f5; --surface:#ffffff; --ink:#171614; --ink-soft:#6b655c;
+    --line:#e9e4dc; --accent:#8a6d3b; --accent-soft:#c9a96a; --gold:#c9a96a; --gold-deep:#a8874e;
+    --danger:#b23b3b; --ok:#2f7d4f; --warn:#c07a2a;
+    --radius:14px; --radius-sm:10px;
+    --shadow:0 4px 18px rgba(20,20,20,.05); --shadow-lg:0 20px 50px rgba(20,20,20,.13);
+    --header-h:56px; --bottom-h:60px;
+    --font:"Vazirmatn",system-ui,sans-serif;
+    --glass:rgba(255,255,255,.85);
+    --safe-top:env(safe-area-inset-top, 0px);
+    --safe-bottom:env(safe-area-inset-bottom, 0px);
+    --safe-left:env(safe-area-inset-left, 0px);
+    --safe-right:env(safe-area-inset-right, 0px);
+  }
+  [data-theme="dark"]{
+    --bg:#0f0f0f; --surface:#1a1a1a; --ink:#f3efe8; --ink-soft:#a09a90;
+    --line:#2b2b2b; --glass:rgba(20,20,20,.88);
+    --shadow:0 4px 18px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:hidden}
+  body{
+    font-family:var(--font);background:var(--bg);color:var(--ink);
+    line-height:1.6;overflow-x:hidden;width:100%;
+    padding-bottom:calc(var(--bottom-h) + var(--safe-bottom));
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    overscroll-behavior-y:contain;
+    font-size:14px;
+  }
+  img{max-width:100%;height:auto;display:block;user-select:none;-webkit-user-drag:none}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;touch-action:manipulation;font-size:inherit}
+  a{color:inherit;text-decoration:none}
+  input,select,textarea{font-family:inherit;font-size:16px;max-width:100%}
+  ::-webkit-scrollbar{width:6px;height:6px}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px}
+
+  .container{
+    width:100%;
+    max-width:1280px;
+    margin-inline:auto;
+    padding-left:calc(12px + var(--safe-left));
+    padding-right:calc(12px + var(--safe-right));
+  }
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    padding:10px 20px;border-radius:999px;font-weight:600;font-size:.85rem;
+    transition:transform .15s ease,background .2s ease,box-shadow .2s ease,border-color .2s;
+    border:1.5px solid transparent;white-space:nowrap;line-height:1.2;min-height:40px;
+    max-width:100%;
+  }
+  .btn:active{transform:scale(.96)}
+  .btn-primary{background:var(--ink);color:var(--bg)}
+  .btn-primary:hover{background:var(--accent)}
+  .btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-deep));color:#fff}
+  .btn-outline{border-color:var(--line);background:var(--surface)}
+  .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+  .btn-danger{background:rgba(178,59,59,.1);color:var(--danger)}
+  .btn-sm{padding:7px 14px;font-size:.76rem;min-height:34px}
+  .btn-xs{padding:4px 10px;font-size:.68rem;min-height:28px}
+  .btn-block{width:100%}
+
+  .icon-btn{
+    width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+    transition:background .2s;position:relative;color:var(--ink);flex-shrink:0;
+  }
+  .icon-btn:active{background:var(--line)}
+  .badge{
+    position:absolute;top:2px;left:2px;min-width:16px;height:16px;padding:0 4px;
+    border-radius:8px;background:var(--accent);color:#fff;font-size:.6rem;
+    display:grid;place-items:center;font-weight:700;
+  }
+  .badge:empty,.badge[data-count="0"]{display:none}
+
+  /* ============ HEADER ============ */
+  .header{
+    position:sticky;top:0;z-index:60;background:var(--glass);
+    backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);
+    border-bottom:1px solid var(--line);
+    height:calc(var(--header-h) + var(--safe-top));
+    padding-top:var(--safe-top);
+    display:flex;align-items:center;width:100%;
+  }
+  .header-inner{
+    display:flex;align-items:center;gap:6px;
+    width:100%;max-width:1280px;margin-inline:auto;
+    padding-inline:calc(10px + var(--safe-left)) calc(10px + var(--safe-right));
+  }
+  .logo{display:flex;align-items:center;gap:6px;font-weight:800;font-size:1rem;flex-shrink:0}
+  .logo-mark{
+    width:30px;height:30px;border-radius:8px;
+    background:linear-gradient(135deg,var(--ink),var(--accent));
+    color:#fff;display:grid;place-items:center;font-size:.9rem;font-weight:800;
+    flex-shrink:0;
+  }
+  .logo small{display:block;font-size:.5rem;font-weight:500;color:var(--accent);letter-spacing:2px;line-height:1}
+  .nav-desktop{display:none}
+  .header-actions{margin-inline-start:auto;display:flex;align-items:center;gap:0}
+  .search-wrap{display:none}
+  .mobile-search-btn{display:grid}
+
+  /* ============ BOTTOM NAV ============ */
+  .bottom-nav{
+    position:fixed;bottom:0;left:0;right:0;z-index:70;
+    height:calc(var(--bottom-h) + var(--safe-bottom));
+    padding-bottom:var(--safe-bottom);
+    background:var(--glass);
+    backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);
+    border-top:1px solid var(--line);
+    display:grid;grid-template-columns:repeat(5,1fr);
+    width:100%;
+  }
+  .bottom-nav button{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+    font-size:.55rem;color:var(--ink-soft);font-weight:500;position:relative;transition:.2s;
+    min-height:44px;padding:4px 2px;
+  }
+  .bottom-nav button.active{color:var(--accent)}
+  .bottom-nav button.active::before{
+    content:"";position:absolute;top:0;width:22px;height:2px;border-radius:0 0 2px 2px;background:var(--accent);
+  }
+  .bottom-nav svg{width:20px;height:20px}
+  .bottom-nav .badge{top:4px;left:calc(50% + 6px)}
+
+  .page{display:none;animation:fadeIn .3s ease}
+  .page.active{display:block;width:100%}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+  /* ============ HERO ============ */
+  .hero{
+    position:relative;overflow:hidden;min-height:auto;
+    background:linear-gradient(125deg,#efe9df 0%,#f8f4ed 42%,#e6ddd0 100%);
+    margin-bottom:24px;padding:40px 0;
+  }
+  [data-theme="dark"] .hero{background:linear-gradient(125deg,#1a1712,#24201a 50%,#16130f)}
+  .hero-content{position:relative;z-index:3;text-align:center;padding:20px 12px;width:100%}
+  .hero-eyebrow{
+    display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;
+    background:rgba(255,255,255,.66);border:1px solid rgba(138,109,59,.28);
+    font-size:.68rem;font-weight:600;color:var(--accent);margin-bottom:14px;
+  }
+  [data-theme="dark"] .hero-eyebrow{background:rgba(201,169,106,.12);border-color:rgba(201,169,106,.35)}
+  .hero h1{font-size:clamp(1.6rem,7vw,3rem);font-weight:800;line-height:1.2;letter-spacing:-.5px}
+  .hero h1 span{
+    display:block;background:linear-gradient(120deg,var(--gold-deep),var(--gold),var(--accent));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .hero p{color:var(--ink-soft);font-size:.85rem;margin:12px auto 18px;max-width:100%;line-height:1.7}
+  .hero-cta{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;width:100%}
+  .hero-cta .btn{font-size:.78rem;padding:9px 16px;min-height:36px}
+  .hero-visual{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+  .hero-orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.5}
+  .hero-orb.a{width:200px;height:200px;background:rgba(201,169,106,.4);top:8%;right:6%}
+  .hero-orb.b{width:160px;height:160px;background:rgba(138,109,59,.28);bottom:12%;left:8%}
+  .hero-orb.c{display:none}
+  .floating-card{display:none}
+
+  /* ============ SECTION ============ */
+  .section{padding:16px 0}
+  .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-bottom:12px;flex-wrap:wrap;width:100%}
+  .section-head > div{min-width:0;flex:1}
+  .section-head h2{font-size:1.05rem;font-weight:800;letter-spacing:-.3px;line-height:1.3}
+  .section-head p{color:var(--ink-soft);font-size:.72rem;margin-top:1px}
+  .see-all{font-size:.72rem;font-weight:600;color:var(--accent);display:inline-flex;align-items:center;gap:3px;cursor:pointer;flex-shrink:0}
+
+  /* ============ PRODUCT GRID — 2 col mobile, responsive ============ */
+  .grid-products{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:8px;
+    width:100%;
+  }
+  @media(min-width:560px){.grid-products{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}}
+  @media(min-width:820px){.grid-products{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}}
+  .grid-products.cols-3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  @media(min-width:560px){.grid-products.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+  .card-product{
+    background:var(--surface);border-radius:var(--radius);overflow:hidden;
+    border:1px solid var(--line);transition:transform .2s,box-shadow .2s;
+    position:relative;display:flex;flex-direction:column;cursor:pointer;
+    min-width:0;
+  }
+  .card-product:active{transform:scale(.98)}
+  @media(hover:hover){.card-product:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}}
+  .card-media{position:relative;aspect-ratio:3/4;overflow:hidden;background:#ece7df;width:100%}
+  .card-media img{width:100%;height:100%;object-fit:cover;transition:transform .4s}
+  .card-badge{
+    position:absolute;top:5px;right:5px;padding:2px 6px;border-radius:999px;
+    background:var(--danger);color:#fff;font-size:.56rem;font-weight:700;z-index:2;
+  }
+  .card-badge.new{background:var(--ok)}
+  .wish-btn{
+    position:absolute;top:4px;left:4px;width:28px;height:28px;border-radius:50%;
+    background:rgba(255,255,255,.92);display:grid;place-items:center;color:var(--ink);
+    z-index:3;box-shadow:0 1px 4px rgba(0,0,0,.1);
+  }
+  .wish-btn:active{transform:scale(.9)}
+  .wish-btn.active{color:var(--danger)}
+  .tryon-badge{
+    position:absolute;bottom:5px;right:5px;padding:2px 6px;border-radius:5px;
+    background:rgba(23,22,20,.8);color:#fff;font-size:.52rem;font-weight:600;
+    display:flex;align-items:center;gap:2px;z-index:2;
+  }
+  .card-body{padding:7px 8px 9px;display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+  .card-cat{font-size:.54rem;color:var(--ink-soft);letter-spacing:.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .card-name{font-size:.74rem;font-weight:600;line-height:1.35;min-height:2em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .card-price{display:flex;align-items:center;gap:4px;margin-top:auto;flex-wrap:wrap;padding-top:2px}
+  .card-price b{font-size:.78rem;color:var(--ink);font-weight:700;white-space:nowrap}
+  .card-price s{font-size:.62rem;color:var(--ink-soft)}
+  .card-price .off{font-size:.54rem;background:rgba(178,59,59,.12);color:var(--danger);padding:1px 4px;border-radius:4px;font-weight:700}
+  .card-colors{display:flex;gap:2px;margin-top:1px}
+  .dot{width:9px;height:9px;border-radius:50%;border:1px solid rgba(0,0,0,.1);flex-shrink:0}
+
+  /* ============ CATEGORY GRID ============ */
+  .cat-grid{
+    display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:8px;width:100%;
+  }
+  @media(min-width:560px){.cat-grid{grid-template-columns:repeat(4,1fr);gap:10px}}
+  .cat-card{
+    position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:4/5;
+    display:flex;align-items:flex-end;padding:10px;color:#fff;cursor:pointer;
+    min-width:0;
+  }
+  .cat-card::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78),rgba(0,0,0,.1) 55%,transparent)}
+  .cat-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .cat-card span{position:relative;z-index:1;font-weight:700;font-size:.82rem;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+
+  /* ============ FEATURES ============ */
+  .features{display:grid;grid-template-columns:1fr;gap:8px;width:100%}
+  @media(min-width:640px){.features{grid-template-columns:repeat(3,1fr)}}
+  .feature{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:12px;display:flex;gap:10px;align-items:flex-start;min-width:0;
+  }
+  .feature-ico{
+    flex-shrink:0;width:34px;height:34px;border-radius:8px;display:grid;place-items:center;
+    background:linear-gradient(135deg,rgba(201,169,106,.22),rgba(138,109,59,.1));color:var(--accent);
+    font-size:.9rem;
+  }
+  .feature > div{min-width:0}
+  .feature h4{font-size:.78rem;margin-bottom:1px;font-weight:700}
+  .feature p{font-size:.68rem;color:var(--ink-soft);line-height:1.4}
+
+  /* ============ TRYON PROMO ============ */
+  .tryon-promo{
+    border-radius:18px;overflow:hidden;position:relative;
+    background:linear-gradient(120deg,#1f1c17,#332e26 55%,#1f1c17);color:#f4efe7;
+    display:grid;grid-template-columns:1fr;min-height:auto;width:100%;
+  }
+  @media(min-width:820px){.tryon-promo{grid-template-columns:1.15fr 1fr}}
+  .tryon-promo-text{padding:20px 16px;display:flex;flex-direction:column;justify-content:center;gap:10px;position:relative;z-index:2;min-width:0}
+  .tryon-promo-text h2{font-size:1.15rem;line-height:1.3;font-weight:800}
+  .tryon-promo-text h2 em{color:var(--gold);font-style:normal}
+  .tryon-promo-text p{color:#c7bfb2;font-size:.75rem;max-width:100%;line-height:1.7}
+  .tryon-promo-text .btn{font-size:.75rem;padding:8px 16px;min-height:36px;align-self:flex-start}
+  .tryon-promo-visual{display:none}
+  @media(min-width:820px){.tryon-promo-visual{display:block;position:relative;min-height:220px;overflow:hidden;background:radial-gradient(circle at 50% 42%,rgba(201,169,106,.3),transparent 62%),linear-gradient(160deg,#2b2620,#1b1814)}}
+
+  /* ============ NEWSLETTER ============ */
+  .newsletter{
+    background:linear-gradient(135deg,var(--ink),#2a2620);color:var(--bg);border-radius:16px;
+    padding:18px 14px;margin:18px 0;display:grid;gap:10px;text-align:center;width:100%;
+  }
+  @media(min-width:720px){.newsletter{grid-template-columns:1fr auto;text-align:right;align-items:center}}
+  .newsletter h3{font-size:.95rem;font-weight:800;line-height:1.3}
+  .newsletter p{opacity:.7;font-size:.7rem;margin-top:2px}
+  .newsletter form{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;width:100%}
+  .newsletter input{flex:1;min-width:0;padding:9px 14px;border-radius:999px;border:none;background:rgba(255,255,255,.12);color:var(--bg);font-size:.78rem;width:100%}
+  .newsletter input::placeholder{color:rgba(255,255,255,.5)}
+  .newsletter .btn{font-size:.75rem;padding:9px 16px;min-height:36px}
+
+  /* ============ FOOTER ============ */
+  .footer{border-top:1px solid var(--line);padding:24px 0 16px;margin-top:20px;width:100%}
+  .footer-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%}
+  @media(min-width:720px){.footer-grid{grid-template-columns:2fr 1fr 1fr 1fr;gap:20px}}
+  .footer h5{font-size:.78rem;font-weight:700;margin-bottom:8px}
+  .footer a,.footer li{display:block;font-size:.72rem;color:var(--ink-soft);padding:2px 0}
+  .footer ul{list-style:none}
+  .footer-brand{grid-column:1 / -1}
+  @media(min-width:720px){.footer-brand{grid-column:auto}}
+  .footer-brand p{font-size:.72rem;color:var(--ink-soft);margin-top:6px;max-width:100%;line-height:1.6}
+  .socials{display:flex;gap:6px;margin-top:8px}
+  .socials a{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:.62rem;font-weight:700}
+  .footer-bottom{border-top:1px solid var(--line);margin-top:16px;padding-top:10px;text-align:center;font-size:.65rem;color:var(--ink-soft)}
+
+  /* ============ SHOP ============ */
+  .shop-layout{display:grid;grid-template-columns:1fr;gap:14px;padding:12px 0;width:100%}
+  @media(min-width:900px){.shop-layout{grid-template-columns:220px minmax(0,1fr)}}
+  .filters{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px;height:fit-content;width:100%}
+  .filters.desktop{display:none}
+  @media(min-width:900px){.filters.desktop{display:block;position:sticky;top:calc(var(--header-h) + var(--safe-top) + 12px)}}
+  .filter-group{border-bottom:1px solid var(--line);padding:8px 0}
+  .filter-group:first-child{padding-top:0}
+  .filter-group:last-child{border-bottom:none;padding-bottom:0}
+  .filter-group h4{font-size:.72rem;font-weight:700;margin-bottom:6px}
+  .chk{display:flex;align-items:center;gap:6px;padding:4px 0;font-size:.74rem;color:var(--ink-soft);cursor:pointer;min-height:28px}
+  .chk input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer;flex-shrink:0}
+  .price-range{display:flex;gap:5px;align-items:center}
+  .price-range input{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);font-size:.72rem;min-width:0}
+  .shop-toolbar{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:10px;width:100%}
+  .shop-toolbar .count{font-size:.72rem;color:var(--ink-soft);font-weight:600;flex-basis:100%;order:-1;margin-bottom:4px}
+  @media(min-width:520px){.shop-toolbar .count{flex-basis:auto;margin-inline-end:auto;margin-bottom:0;order:0}}
+  .shop-toolbar select{padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:.7rem;cursor:pointer;flex:1;min-width:0;max-width:160px}
+  .filter-toggle-mobile{display:inline-flex;flex:1;max-width:100px}
+  @media(min-width:900px){.filter-toggle-mobile{display:none}}
+  .empty-state{text-align:center;padding:40px 16px;color:var(--ink-soft);width:100%}
+  .empty-state h3{color:var(--ink);margin-bottom:4px;font-size:.92rem}
+  .empty-state p{font-size:.75rem}
+  .empty-state svg{width:44px;height:44px;margin:0 auto 10px;opacity:.35}
+
+  /* ============ SHEETS ============ */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:90;opacity:0;visibility:hidden;transition:.25s}
+  .overlay.open{opacity:1;visibility:visible}
+  .sheet{
+    position:fixed;z-index:100;background:var(--surface);
+    transition:transform .3s cubic-bezier(.16,1,.3,1);
+    display:flex;flex-direction:column;box-shadow:var(--shadow-lg);width:100%;
+    padding-bottom:var(--safe-bottom);
+  }
+  .sheet.side{
+    top:0;bottom:0;right:0;width:100%;max-width:100%;
+    transform:translateX(105%);
+    padding-top:var(--safe-top);
+  }
+  @media(min-width:520px){.sheet.side{width:min(420px,90vw);max-width:100%;border-radius:20px 0 0 20px}}
+  .sheet.side.open{transform:translateX(0)}
+  .sheet.bottom{left:0;right:0;bottom:0;max-height:88vh;border-radius:18px 18px 0 0;transform:translateY(105%)}
+  .sheet.bottom.open{transform:translateY(0)}
+  .sheet-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line);flex-shrink:0}
+  .sheet-head h3{font-size:.92rem;font-weight:700}
+  .sheet-body{padding:12px 14px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+  .sheet-foot{padding:10px 14px;border-top:1px solid var(--line);flex-shrink:0}
+
+  /* ============ CART ============ */
+  .cart-item{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);width:100%}
+  .cart-item:last-child{border-bottom:none}
+  .cart-item img{width:54px;height:70px;object-fit:cover;border-radius:6px;flex-shrink:0;background:#ece7df}
+  .cart-item-info{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+  .cart-item-info b{font-size:.76rem;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .cart-item-info small{font-size:.64rem;color:var(--ink-soft)}
+  .qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;overflow:hidden;width:fit-content;background:var(--bg);margin-top:3px}
+  .qty button{width:24px;height:24px;display:grid;place-items:center;font-size:.9rem;color:var(--ink-soft);flex-shrink:0}
+  .qty span{min-width:22px;text-align:center;font-size:.72rem;font-weight:600}
+  .cart-item .price-col{text-align:left;display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
+  .cart-item .price-col b{font-size:.74rem;white-space:nowrap}
+  .rm{font-size:.62rem;color:var(--danger);font-weight:600}
+  .cart-summary{display:flex;flex-direction:column;gap:4px;font-size:.76rem}
+  .cart-summary .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .cart-summary .row span:last-child{font-weight:600;white-space:nowrap}
+  .cart-summary .row.total{font-weight:800;font-size:.9rem;border-top:1px dashed var(--line);padding-top:6px;margin-top:2px}
+
+  /* ============ PRODUCT DETAIL ============ */
+  .pd-layout{display:grid;grid-template-columns:1fr;gap:14px;padding:10px 0;width:100%}
+  @media(min-width:820px){.pd-layout{grid-template-columns:1fr 1fr;gap:32px}}
+  .pd-gallery-main{border-radius:var(--radius);overflow:hidden;aspect-ratio:3/4;background:#ece7df;width:100%}
+  .pd-gallery-main img{width:100%;height:100%;object-fit:cover}
+  .pd-thumbs{display:flex;gap:4px;margin-top:6px;overflow-x:auto;padding-bottom:2px;width:100%}
+  .pd-thumbs img{width:48px;height:60px;object-fit:cover;border-radius:5px;cursor:pointer;border:2px solid transparent;flex-shrink:0;background:#ece7df}
+  .pd-thumbs img.active{border-color:var(--accent)}
+  .pd-info{min-width:0;width:100%}
+  .pd-info h1{font-size:1.1rem;font-weight:800;line-height:1.3;margin-bottom:6px}
+  .pd-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .pd-price{font-size:1.15rem;font-weight:800;color:var(--accent)}
+  .pd-price s{font-size:.8rem;color:var(--ink-soft);font-weight:400;margin-inline-start:4px}
+  .pd-desc{color:var(--ink-soft);font-size:.78rem;margin:8px 0;line-height:1.7}
+  .opt-label{font-size:.74rem;font-weight:700;margin:10px 0 5px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+  .swatches{display:flex;gap:5px;flex-wrap:wrap}
+  .swatch{width:32px;height:32px;border-radius:50%;border:2px solid var(--line);cursor:pointer;position:relative;flex-shrink:0}
+  .swatch.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(138,109,59,.15)}
+  .swatch.active::after{content:"✓";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:.7rem;text-shadow:0 1px 3px rgba(0,0,0,.7)}
+  .sizes{display:flex;gap:4px;flex-wrap:wrap}
+  .size-btn{min-width:40px;padding:6px 10px;border-radius:6px;border:1.5px solid var(--line);font-size:.74rem;font-weight:600;background:var(--surface);min-height:32px}
+  .size-btn.active{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .size-btn:disabled{opacity:.3;cursor:not-allowed;text-decoration:line-through}
+  .pd-actions{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap;width:100%}
+  .pd-actions .btn{flex:1;min-width:0;padding:10px 14px;font-size:.78rem;min-height:40px}
+  .pd-actions #wishBtn{flex:0 0 auto;padding:10px 14px}
+  .err-msg{color:var(--danger);font-size:.72rem;margin-top:6px;min-height:1em;font-weight:600}
+
+  /* ============ STUDIO ============ */
+  .studio{
+    position:relative;width:100%;
+    height:calc(100dvh - var(--header-h) - var(--bottom-h) - var(--safe-top) - var(--safe-bottom));
+    min-height:360px;display:flex;overflow:hidden;background:var(--bg);
+  }
+  .studio-canvas-wrap{flex:1;position:relative;background:linear-gradient(160deg,#e9e2d6,#d4cabb);overflow:hidden;min-width:0;width:100%}
+  [data-theme="dark"] .studio-canvas-wrap{background:linear-gradient(160deg,#181613,#0e0d0b)}
+  .studio-canvas-wrap canvas{display:block;width:100%!important;height:100%!important;touch-action:none}
+  .studio-hud{position:absolute;top:6px;left:6px;display:flex;gap:4px;z-index:5;flex-wrap:wrap}
+  .studio-hud.right{left:auto;right:6px}
+  .hud-btn{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.9);display:grid;place-items:center;color:var(--ink);backdrop-filter:blur(8px);box-shadow:0 1px 6px rgba(0,0,0,.12);font-size:.82rem;min-width:34px}
+  [data-theme="dark"] .hud-btn{background:rgba(40,36,30,.9)}
+  .hud-btn.active{background:var(--ink);color:#fff}
+  .studio-panel{width:320px;max-width:100%;background:var(--surface);border-inline-start:1px solid var(--line);display:none;flex-direction:column;flex-shrink:0}
+  @media(min-width:900px){.studio-panel{display:flex}}
+  .panel-tabs{display:flex;border-bottom:1px solid var(--line);flex-shrink:0}
+  .panel-tabs button{flex:1;padding:9px 4px;font-size:.7rem;font-weight:600;color:var(--ink-soft);border-bottom:2px solid transparent}
+  .panel-tabs button.active{color:var(--accent);border-color:var(--accent)}
+  .panel-content{flex:1;overflow-y:auto;padding:10px}
+  .worn-list{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+  .worn-item{display:flex;gap:6px;align-items:center;padding:5px;border-radius:6px;background:var(--bg);border:1px solid var(--line)}
+  .worn-item img{width:32px;height:42px;object-fit:cover;border-radius:4px;flex-shrink:0}
+  .worn-item .wi-info{flex:1;min-width:0}
+  .worn-item b{font-size:.68rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .worn-item small{font-size:.6rem;color:var(--ink-soft)}
+  .worn-item button{color:var(--danger);font-size:.6rem;font-weight:600;flex-shrink:0}
+  .tryon-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+  .tryon-card{border-radius:6px;overflow:hidden;border:2px solid transparent;cursor:pointer;background:var(--bg);position:relative;aspect-ratio:3/4}
+  .tryon-card.active{border-color:var(--accent)}
+  .tryon-card img{width:100%;height:100%;object-fit:cover}
+  .tryon-card span{position:absolute;bottom:0;left:0;right:0;font-size:.5rem;padding:2px;background:linear-gradient(transparent,rgba(0,0,0,.8));color:#fff;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .panel-section{margin-bottom:10px}
+  .panel-section h4{font-size:.66rem;font-weight:700;margin-bottom:5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.4px}
+  .skin-swatches{display:flex;gap:5px;flex-wrap:wrap}
+  .skin-sw{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);cursor:pointer;flex-shrink:0}
+  .skin-sw.active{border-color:var(--accent)}
+  .range-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+  .range-row label{font-size:.66rem;width:56px;color:var(--ink-soft);flex-shrink:0}
+  .range-row input[type=range]{flex:1;accent-color:var(--accent);height:4px;min-width:0}
+  .range-row output{font-size:.62rem;width:32px;text-align:left;font-weight:600;flex-shrink:0}
+  .studio-mobile-toggle{display:flex}
+  @media(min-width:900px){.studio-mobile-toggle{display:none}}
+  .studio-mobile-panel{
+    position:absolute;bottom:0;left:0;right:0;max-height:65%;z-index:20;
+    background:var(--surface);border-radius:16px 16px 0 0;box-shadow:0 -6px 30px rgba(0,0,0,.3);
+    transform:translateY(105%);transition:transform .3s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;
+    padding-bottom:var(--safe-bottom);
+  }
+  .studio-mobile-panel.open{transform:translateY(0)}
+  @media(min-width:900px){.studio-mobile-panel{display:none!important}}
+  .loading-overlay{position:absolute;inset:0;display:grid;place-items:center;z-index:15;background:rgba(250,248,245,.75);backdrop-filter:blur(4px)}
+  .spinner{width:38px;height:38px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .webgl-fallback{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;text-align:center;padding:16px;background:var(--bg);z-index:10}
+  .zoom-controls{position:absolute;bottom:10px;left:10px;z-index:5;display:flex;flex-direction:column;gap:4px}
+  .zoom-controls .hud-btn{width:34px;height:34px;font-size:1rem;font-weight:700}
+
+  /* ============ CHECKOUT ============ */
+  .co-layout{display:grid;grid-template-columns:1fr;gap:12px;padding:12px 0;width:100%}
+  @media(min-width:820px){.co-layout{grid-template-columns:1.4fr 1fr}}
+  .form-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px;margin-bottom:10px;width:100%}
+  .form-card h3{font-size:.82rem;margin-bottom:10px;font-weight:700}
+  .field{margin-bottom:9px}
+  .field label{display:block;font-size:.7rem;font-weight:600;margin-bottom:4px}
+  .field input,.field select,.field textarea{width:100%;padding:9px 10px;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);font-size:.8rem;max-width:100%}
+  .field .err{color:var(--danger);font-size:.62rem;margin-top:2px;display:none}
+  .field.has-error .err{display:block}
+  .field.has-error input,.field.has-error textarea,.field.has-error select{border-color:var(--danger)}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  @media(max-width:380px){.field-row{grid-template-columns:1fr}}
+  .ship-opt{display:flex;align-items:center;gap:6px;padding:9px;border:1.5px solid var(--line);border-radius:8px;margin-bottom:5px;cursor:pointer;font-size:.74rem}
+  .ship-opt:has(input:checked){border-color:var(--accent);background:rgba(138,109,59,.06)}
+  .ship-opt input{accent-color:var(--accent);flex-shrink:0}
+  .order-summary{position:static;width:100%}
+  @media(min-width:820px){.order-summary{position:sticky;top:calc(var(--header-h) + var(--safe-top) + 12px)}}
+
+  /* ============ INFO PAGES ============ */
+  .info-page{max-width:840px;margin-inline:auto;padding:14px 0;width:100%}
+  .info-page h1{font-size:1.15rem;font-weight:800;margin-bottom:4px}
+  .info-page .lead{color:var(--ink-soft);margin-bottom:14px;font-size:.78rem}
+  .prose h2{font-size:.92rem;margin:14px 0 6px;font-weight:700}
+  .prose h3{font-size:.82rem;margin:10px 0 4px;font-weight:700}
+  .prose p,.prose li{color:var(--ink-soft);font-size:.76rem;margin-bottom:5px;line-height:1.7}
+  .prose ul{padding-inline-start:16px;margin-bottom:8px}
+  .accordion{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:6px;background:var(--surface)}
+  .accordion summary{padding:9px 12px;font-weight:600;font-size:.76rem;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  .accordion summary::-webkit-details-marker{display:none}
+  .accordion summary::after{content:"+";font-size:1rem;color:var(--accent)}
+  .accordion[open] summary::after{content:"−"}
+  .accordion p{padding:0 12px 10px;font-size:.72rem;color:var(--ink-soft)}
+
+  /* ============ AUTH ============ */
+  .auth-card{max-width:400px;margin:20px auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;width:calc(100% - 24px)}
+  .auth-card h2{text-align:center;margin-bottom:4px;font-size:1.05rem}
+  .auth-card .sub{text-align:center;color:var(--ink-soft);font-size:.72rem;margin-bottom:14px}
+  .auth-switch{text-align:center;font-size:.7rem;color:var(--ink-soft);margin-top:10px}
+  .auth-switch button{color:var(--accent);font-weight:600}
+
+  /* ============ DASHBOARD ============ */
+  .dash{display:grid;grid-template-columns:1fr;gap:10px;padding:10px 0;width:100%}
+  @media(min-width:900px){.dash{grid-template-columns:200px minmax(0,1fr)}}
+  .dash-nav{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:6px;height:fit-content;display:flex;flex-direction:row;gap:3px;overflow-x:auto;width:100%;-webkit-overflow-scrolling:touch}
+  @media(min-width:900px){.dash-nav{position:sticky;top:calc(var(--header-h) + var(--safe-top) + 12px);flex-direction:column;overflow:visible}}
+  .dash-nav button{display:flex;align-items:center;gap:5px;padding:7px 10px;border-radius:6px;font-size:.74rem;font-weight:500;color:var(--ink-soft);white-space:nowrap;flex-shrink:0}
+  @media(min-width:900px){.dash-nav button{width:100%;white-space:normal}}
+  .dash-nav button.active{background:var(--ink);color:var(--bg)}
+  .dash-content{min-width:0;width:100%}
+  .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px;width:100%}
+  @media(min-width:640px){.stat-grid{grid-template-columns:repeat(4,1fr)}}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px;display:flex;flex-direction:column;gap:2px;min-width:0}
+  .stat .ico{width:30px;height:30px;border-radius:7px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(201,169,106,.22),rgba(138,109,59,.1));color:var(--accent);margin-bottom:3px;font-size:.85rem}
+  .stat b{font-size:1rem;font-weight:800;line-height:1.2}
+  .stat small{font-size:.62rem;color:var(--ink-soft)}
+  .panel-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:10px;margin-bottom:10px;width:100%;overflow:hidden}
+  .panel-card h3{font-size:.82rem;font-weight:700;margin-bottom:8px}
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%}
+  .data-table{width:100%;border-collapse:collapse;font-size:.7rem}
+  .data-table th,.data-table td{padding:6px 4px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  .data-table th{font-weight:700;color:var(--ink-soft);font-size:.62rem;text-transform:uppercase;letter-spacing:.3px}
+  .status-pill{padding:2px 6px;border-radius:999px;font-size:.58rem;font-weight:600;display:inline-block;white-space:nowrap}
+  .status-pill.ok{background:rgba(47,125,79,.12);color:var(--ok)}
+  .status-pill.warn{background:rgba(192,122,42,.12);color:var(--warn)}
+  .status-pill.bad{background:rgba(178,59,59,.12);color:var(--danger)}
+
+  /* ============ BLOG ============ */
+  .blog-grid{display:grid;grid-template-columns:1fr;gap:10px;width:100%}
+  @media(min-width:560px){.blog-grid{grid-template-columns:repeat(2,1fr)}}
+  @media(min-width:900px){.blog-grid{grid-template-columns:repeat(3,1fr)}}
+  .blog-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;min-width:0}
+  .blog-card:active{transform:scale(.98)}
+  .blog-card .bimg{aspect-ratio:16/10;overflow:hidden;background:#ece7df;width:100%}
+  .blog-card .bimg img{width:100%;height:100%;object-fit:cover}
+  .blog-card .bbody{padding:10px;display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+  .blog-card h3{font-size:.8rem;font-weight:700;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .blog-card p{font-size:.68rem;color:var(--ink-soft);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .blog-card .bmeta{display:flex;gap:6px;font-size:.6rem;color:var(--ink-soft);margin-top:auto;padding-top:5px}
+  .post-view{max-width:760px;margin-inline:auto;padding:12px 0;width:100%}
+  .post-view h1{font-size:1.05rem;font-weight:800;line-height:1.3;margin-bottom:4px}
+  .post-view .pmeta{display:flex;gap:8px;color:var(--ink-soft);font-size:.68rem;margin-bottom:10px;flex-wrap:wrap}
+  .post-view .pcontent{color:var(--ink-soft);font-size:.78rem;line-height:1.8}
+  .post-view .pcontent p{margin-bottom:8px}
+  .post-view .pcover{border-radius:var(--radius);overflow:hidden;margin-bottom:10px;aspect-ratio:16/9;background:#ece7df;width:100%}
+  .post-view .pcover img{width:100%;height:100%;object-fit:cover}
+
+  /* ============ TOAST ============ */
+  .toast-wrap{position:fixed;bottom:calc(var(--bottom-h) + var(--safe-bottom) + 8px);left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:5px;align-items:center;pointer-events:none;width:max-content;max-width:calc(100vw - 24px)}
+  .toast{background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:.74rem;font-weight:600;box-shadow:var(--shadow-lg);animation:toastIn .3s cubic-bezier(.16,1,.3,1);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .toast.ok{background:var(--ok);color:#fff}
+  .toast.err{background:var(--danger);color:#fff}
+  @keyframes toastIn{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:none}}
+
+  /* ============ MODAL ============ */
+  .modal{position:fixed;inset:0;z-index:150;display:grid;place-items:center;padding:12px;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:.25s}
+  .modal.open{opacity:1;visibility:visible}
+  .modal-box{background:var(--surface);border-radius:16px;max-width:520px;width:100%;max-height:88vh;overflow-y:auto;padding:16px;position:relative;-webkit-overflow-scrolling:touch}
+  .modal-close{position:absolute;top:8px;left:8px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--bg)}
+  .modal-box h3{font-size:.9rem;margin-bottom:10px;font-weight:700}
+  table.size-table{width:100%;border-collapse:collapse;font-size:.68rem;margin-top:6px}
+  table.size-table th,table.size-table td{border:1px solid var(--line);padding:5px;text-align:center}
+  table.size-table th{background:var(--bg);font-weight:700}
+
+  .breadcrumb{display:flex;gap:5px;font-size:.66rem;color:var(--ink-soft);padding:8px 0;flex-wrap:wrap;align-items:center}
+
+  /* ============ DESKTOP OVERRIDES ============ */
+  @media(min-width:900px){
+    :root{--header-h:64px}
+    body{padding-bottom:0;font-size:15px}
+    .bottom-nav{display:none}
+    .nav-desktop{display:flex;gap:2px;margin-inline-start:8px}
+    .nav-desktop button{padding:6px 12px;border-radius:999px;font-size:.82rem;font-weight:500;color:var(--ink-soft)}
+    .nav-desktop button.active{color:var(--ink);background:var(--line)}
+    .search-wrap{display:block;position:relative}
+    .search-wrap input{width:180px;padding:7px 32px 7px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);font-size:.8rem;transition:width .2s}
+    .search-wrap input:focus{outline:none;border-color:var(--accent);width:240px}
+    .search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.45;pointer-events:none}
+    .mobile-search-btn{display:none}
+    .logo{font-size:1.15rem}
+    .logo-mark{width:34px;height:34px;font-size:1rem}
+    .hero{padding:60px 0;margin-bottom:40px;border-radius:0 0 40px 40px}
+    .hero h1{font-size:clamp(2rem,5vw,4rem)}
+    .hero p{font-size:1.05rem;max-width:540px}
+    .hero-cta .btn{font-size:.9rem;padding:11px 22px}
+    .hero-orb.a{width:320px;height:320px}
+    .hero-orb.b{width:250px;height:250px}
+    .hero-orb.c{display:block;width:180px;height:180px;background:rgba(230,200,150,.3);top:50%;left:42%}
+    .floating-card{display:block;position:absolute;background:rgba(255,255,255,.85);backdrop-filter:blur(14px);border-radius:14px;padding:12px 18px;box-shadow:var(--shadow-lg);z-index:2}
+    .floating-card.fc-1{top:16%;left:7%}
+    .floating-card.fc-2{bottom:20%;right:8%}
+    .floating-card.fc-3{top:52%;right:14%}
+    .section{padding:28px 0}
+    .section-head h2{font-size:1.6rem}
+    .section-head p{font-size:.85rem}
+    .grid-products{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .card-body{padding:10px 12px 12px}
+    .card-name{font-size:.85rem}
+    .card-price b{font-size:.9rem}
+    .card-cat{font-size:.62rem}
+    .tryon-promo{min-height:340px}
+    .tryon-promo-text{padding:32px}
+    .tryon-promo-text h2{font-size:1.7rem}
+    .tryon-promo-text p{font-size:.88rem}
+    .tryon-promo-visual{display:block;min-height:280px}
+    .footer{padding:32px 0 20px;margin-top:28px}
+    .footer-grid{grid-template-columns:2fr 1fr 1fr 1fr;gap:24px}
+    .footer-brand{grid-column:auto}
+    .footer h5{font-size:.85rem}
+    .footer a,.footer li{font-size:.78rem;padding:3px 0}
+    .footer-bottom{font-size:.72rem}
+    .toast-wrap{bottom:20px}
+    .shop-layout{grid-template-columns:220px minmax(0,1fr);gap:20px}
+    .shop-toolbar .count{flex-basis:auto;order:0;margin-inline-end:auto;margin-bottom:0}
+    .shop-toolbar select{max-width:none;flex:0 0 auto}
+    .filter-toggle-mobile{display:none;flex:0 0 auto;max-width:none}
+    .pd-layout{grid-template-columns:1fr 1fr;gap:32px}
+    .pd-info h1{font-size:1.6rem}
+    .pd-price{font-size:1.4rem}
+    .pd-desc{font-size:.88rem}
+    .pd-actions .btn{font-size:.88rem;padding:12px 20px}
+    .studio-panel{width:340px}
+    .panel-content{padding:14px}
+    .stat-grid{grid-template-columns:repeat(4,1fr);gap:12px}
+    .stat{padding:14px}
+    .stat b{font-size:1.3rem}
+    .stat .ico{width:36px;height:36px}
+    .panel-card{padding:16px}
+    .panel-card h3{font-size:.92rem}
+    .data-table{font-size:.78rem}
+    .data-table th,.data-table td{padding:8px 6px}
+    .dash{grid-template-columns:200px minmax(0,1fr);gap:16px}
+    .dash-nav{padding:8px}
+    .dash-nav button{font-size:.82rem;padding:9px 12px}
+    .co-layout{grid-template-columns:1.4fr 1fr;gap:20px}
+    .form-card{padding:16px}
+    .order-summary{position:sticky}
+    .newsletter{padding:24px 20px;margin:24px 0}
+    .newsletter h3{font-size:1.1rem}
+    .newsletter p{font-size:.8rem}
+    .newsletter input{font-size:.85rem;padding:11px 16px}
+    .newsletter .btn{font-size:.85rem;padding:11px 22px}
+    .blog-grid{grid-template-columns:repeat(3,1fr);gap:16px}
+    .blog-card h3{font-size:.9rem}
+    .blog-card p{font-size:.76rem}
+    .blog-card .bbody{padding:14px}
+    .post-view h1{font-size:1.6rem}
+    .post-view .pcontent{font-size:.9rem;line-height:1.9}
+    .info-page h1{font-size:1.6rem}
+    .info-page .lead{font-size:.92rem}
+    .prose h2{font-size:1.05rem}
+    .prose p,.prose li{font-size:.85rem}
+    .auth-card{padding:24px}
+    .auth-card h2{font-size:1.2rem}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="#" class="logo" data-nav="home">
+      <span class="logo-mark">V</span>
+      <span>VESTORA<small>3D STUDIO</small></span>
+    </a>
+    <nav class="nav-desktop">
+      <button data-nav="home" class="active">خانه</button>
+      <button data-nav="men">مردانه</button>
+      <button data-nav="women">زنانه</button>
+      <button data-nav="shop">فروشگاه</button>
+      <button data-nav="blog">مجله</button>
+      <button data-nav="tryon">پرو مجازی</button>
+    </nav>
+    <div class="header-actions">
+      <div class="search-wrap">
+        <input type="search" id="headerSearch" placeholder="جست‌وجو…" aria-label="جست‌وجو">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      </div>
+      <button class="icon-btn mobile-search-btn" id="mobileSearchBtn" aria-label="جست‌وجو">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      </button>
+      <button class="icon-btn" id="themeToggle" aria-label="تغییر تم">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>
+      </button>
+      <button class="icon-btn" id="wishlistBtn" aria-label="علاقه‌مندی‌ها">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.2C.4 8 2.3 4.3 6 4c2.2-.2 3.8 1 5 2.6C12.2 5 13.8 3.8 16 4c3.7.3 5.6 4 4 7.8-2.5 4.6-10 9.2-10 9.2Z"/></svg>
+        <span class="badge" id="wishBadge" data-count="0"></span>
+      </button>
+      <button class="icon-btn" id="cartBtn" aria-label="سبد خرید">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+        <span class="badge" id="cartBadge" data-count="0"></span>
+      </button>
+      <button class="icon-btn" data-nav="account" aria-label="حساب کاربری">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<nav class="bottom-nav" aria-label="ناوبری پایین">
+  <button data-nav="home" class="active">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/></svg>
+    خانه
+  </button>
+  <button data-nav="shop">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16l-1.5 13h-13Z"/><path d="M8 7a4 4 0 0 1 8 0"/></svg>
+    فروشگاه
+  </button>
+  <button data-nav="tryon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="2.5"/><path d="M12 8v6m0 0-3 7m3-7 3 7M7 11h10"/></svg>
+    پرو مجازی
+  </button>
+  <button data-nav="wishlist">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.2C.4 8 2.3 4.3 6 4c2.2-.2 3.8 1 5 2.6C12.2 5 13.8 3.8 16 4c3.7.3 5.6 4 4 7.8-2.5 4.6-10 9.2-10 9.2Z"/></svg>
+    علاقه‌مندی
+  </button>
+  <button data-nav="account">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg>
+    حساب
+  </button>
+</nav>
+
+<div class="toast-wrap" id="toastWrap"></div>
+<div class="overlay" id="overlay"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+/* =========================================================
+   VESTORA 3D — mobile-first PWA
+   ========================================================= */
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+const $ = (s, r=document)=>r.querySelector(s);
+const $$ = (s, r=document)=>[...r.querySelectorAll(s)];
+const el = (tag, cls, html)=>{ const e=document.createElement(tag); if(cls)e.className=cls; if(html!=null)e.innerHTML=html; return e; };
+const esc = s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = n=>Number(n||0).toLocaleString('fa-IR');
+const uid = ()=>Math.random().toString(36).slice(2,10);
+const debounce = (fn,ms=200)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms)}};
+const todayISO = ()=>new Date().toISOString().slice(0,10);
+
+const Storage = {
+  prefix:'vestora3d:',
+  get(k, def){ try{ const v=localStorage.getItem(this.prefix+k); return v?JSON.parse(v):def; }catch(e){ return def; } },
+  set(k,v){ try{ localStorage.setItem(this.prefix+k, JSON.stringify(v)); }catch(e){} },
+  remove(k){ try{ localStorage.removeItem(this.prefix+k); }catch(e){} }
+};
+
+const AppState = {
+  page:'home',
+  theme: Storage.get('theme','light'),
+  cart: Storage.get('cart',[]),
+  wishlist: Storage.get('wishlist',[]),
+  styles: Storage.get('styles',[]),
+  orders: Storage.get('orders',[]),
+  posts: Storage.get('posts',[]),
+  account: Storage.get('account',null),
+  productOverrides: Storage.get('productOverrides',{}),
+  filters:{ gender:[], cat:[], colors:[], sizes:[], min:null, max:null, inStock:false, sort:'newest', q:'' },
+  lastTryOn: null,
+  _pendingStyle: null,
+  _accTab: 'overview',
+  _adminTab: 'overview'
+};
+
+const CATEGORIES = {
+  men:['تی‌شرت و پولوشرت','پیراهن','شلوار','جین','کت و بلیزر','لباس رسمی','کفش','اکسسوری'],
+  women:['بلوز و شومیز','تی‌شرت','شلوار و جین','دامن','پیراهن و لباس مجلسی','کت و مانتو','کفش','کیف و اکسسوری']
+};
+const COLORS = {
+  black:'#1b1b1b', white:'#f6f3ee', cream:'#e9dfcf', beige:'#cdbba1',
+  navy:'#22314a', gray:'#8a8a8a', green:'#3f5c4a', brown:'#6b4f37',
+  red:'#8e3232', blue:'#3e5f8a', pink:'#c68f96', gold:'#c9a96a'
+};
+const IMG = {
+  men_tee:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=70&auto=format&fit=crop',
+  men_shirt:'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&q=70&auto=format&fit=crop',
+  men_jeans:'https://images.unsplash.com/photo-1542272604-787c3835535d?w=600&q=70&auto=format&fit=crop',
+  men_jacket:'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&q=70&auto=format&fit=crop',
+  men_pants:'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&q=70&auto=format&fit=crop',
+  men_shoes:'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=600&q=70&auto=format&fit=crop',
+  men_polo:'https://images.unsplash.com/photo-1625910513413-5fc45e0e6b5c?w=600&q=70&auto=format&fit=crop',
+  men_access:'https://images.unsplash.com/photo-1524805444758-089113d48a6d?w=600&q=70&auto=format&fit=crop',
+  women_blouse:'https://images.unsplash.com/photo-1564257577-2b9a9c1a4b8b?w=600&q=70&auto=format&fit=crop',
+  women_tee:'https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&q=70&auto=format&fit=crop',
+  women_jeans:'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=600&q=70&auto=format&fit=crop',
+  women_skirt:'https://images.unsplash.com/photo-1583496661160-fb5886a13d77?w=600&q=70&auto=format&fit=crop',
+  women_dress:'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&q=70&auto=format&fit=crop',
+  women_coat:'https://images.unsplash.com/photo-1548624149-f9b1859a4b1e?w=600&q=70&auto=format&fit=crop',
+  women_shoes:'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600&q=70&auto=format&fit=crop',
+  women_bag:'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=70&auto=format&fit=crop',
+  blog1:'https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&q=70&auto=format&fit=crop',
+  blog2:'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=70&auto=format&fit=crop',
+  blog3:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=70&auto=format&fit=crop',
+  blog4:'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=800&q=70&auto=format&fit=crop'
+};
+const sizeChart = [
+  {size:'XS', chest:84, waist:66, hip:88},
+  {size:'S', chest:88, waist:70, hip:92},
+  {size:'M', chest:94, waist:76, hip:98},
+  {size:'L', chest:100, waist:82, hip:104},
+  {size:'XL', chest:106, waist:88, hip:110},
+  {size:'XXL', chest:112, waist:94, hip:116}
+];
+function makeProduct({id,name,gender,cat,price,offColors,sizes,img,desc,fabric,stock=12,tryOn=false,new:isNew=false,popular=Math.random()}){
+  return {
+    id, name, gender, category:cat, price: Math.round(price), salePrice:null,
+    colors: offColors.map(([k])=>COLORS[k]||'#999'), colorKeys: offColors.map(([k])=>k),
+    sizes, images:[img], desc, fabric, stock, tryOn, isNew, popular, sizeChart,
+    modelId: tryOn ? 'procedural-'+id : null
+  };
+}
+
+const ProductCatalog = [
+  makeProduct({id:'m1',name:'تی‌شرت پنبه‌ای اسنس',gender:'men',cat:'تی‌شرت و پولوشرت',price:890000,offColors:[['black'],['white'],['navy']],sizes:['S','M','L','XL'],img:IMG.men_tee,desc:'تی‌شرت نخی با یقه گرد.',fabric:'۱۰۰٪ پنبه',tryOn:true,new:true}),
+  makeProduct({id:'m2',name:'پیراهن رسمی آکسفورد',gender:'men',cat:'پیراهن',price:1690000,offColors:[['white'],['blue'],['gray']],sizes:['S','M','L','XL','XXL'],img:IMG.men_shirt,desc:'پیراهن آکسفورد نیمه‌جذب.',fabric:'پنبه آکسفورد',tryOn:true}),
+  makeProduct({id:'m3',name:'جین اسلیم فیت تیره',gender:'men',cat:'جین',price:1890000,offColors:[['navy'],['black']],sizes:['S','M','L','XL'],img:IMG.men_jeans,desc:'جین کش‌دار پنج جیب.',fabric:'پنبه-الاستان',tryOn:true}),
+  makeProduct({id:'m4',name:'کت bomber زغالی',gender:'men',cat:'کت و بلیزر',price:3290000,offColors:[['black'],['green']],sizes:['M','L','XL'],img:IMG.men_jacket,desc:'کت بامبر با آستر ساتن.',fabric:'نایلون',tryOn:true,new:true}),
+  makeProduct({id:'m5',name:'شلوار پارچه‌ای کلاسیک',gender:'men',cat:'شلوار',price:1450000,offColors:[['gray'],['navy'],['black']],sizes:['S','M','L','XL'],img:IMG.men_pants,desc:'شلوار پارچه‌ای کمر کشی.',fabric:'پلی‌استر',tryOn:true}),
+  makeProduct({id:'m6',name:'کفش چرمی رسمی',gender:'men',cat:'کفش',price:2890000,offColors:[['brown'],['black']],sizes:['40','41','42','43','44'],img:IMG.men_shoes,desc:'کفش چرم طبیعی.',fabric:'چرم',tryOn:true}),
+  makeProduct({id:'m7',name:'پولوشرت پیکه',gender:'men',cat:'تی‌شرت و پولوشرت',price:1190000,offColors:[['navy'],['white'],['green']],sizes:['S','M','L','XL'],img:IMG.men_polo,desc:'پولوشرت پیکه سه‌دکمه.',fabric:'پیکه',tryOn:true}),
+  makeProduct({id:'m8',name:'ساعت مچی مینیمال',gender:'men',cat:'اکسسوری',price:3490000,offColors:[['black'],['brown']],sizes:['FREE'],img:IMG.men_access,desc:'ساعت با بند چرم.',fabric:'چرم و استیل',tryOn:false}),
+  makeProduct({id:'m9',name:'بلزر رسمی تک‌دکمه',gender:'men',cat:'کت و بلیزر',price:3990000,offColors:[['navy'],['black']],sizes:['M','L','XL'],img:IMG.men_jacket,desc:'بلزر نیمه‌آستر.',fabric:'پشم مخلوط',tryOn:true}),
+  makeProduct({id:'m10',name:'پیراهن کتان تابستانی',gender:'men',cat:'پیراهن',price:1590000,offColors:[['cream'],['beige']],sizes:['M','L','XL'],img:IMG.men_shirt,desc:'پیراهن کتان یقه فرنچ.',fabric:'کتان',tryOn:true}),
+  makeProduct({id:'m11',name:'شلوار جین راسته',gender:'men',cat:'جین',price:1790000,offColors:[['blue'],['black']],sizes:['M','L','XL'],img:IMG.men_jeans,desc:'جین راسته.',fabric:'۱۰۰٪ پنبه',tryOn:true}),
+  makeProduct({id:'m12',name:'لباس رسمی سه‌تکه',gender:'men',cat:'لباس رسمی',price:6990000,offColors:[['black'],['navy']],sizes:['M','L','XL'],img:IMG.men_jacket,desc:'ست کامل رسمی.',fabric:'پشم مرینوس',tryOn:true}),
+  makeProduct({id:'w1',name:'بلوز ساتن یقه‌گرد',gender:'women',cat:'بلوز و شومیز',price:1290000,offColors:[['cream'],['pink'],['black']],sizes:['XS','S','M','L'],img:IMG.women_blouse,desc:'بلوز ساتن.',fabric:'ساتن',tryOn:true,new:true}),
+  makeProduct({id:'w2',name:'تی‌شرت کراپ نخی',gender:'women',cat:'تی‌شرت',price:790000,offColors:[['white'],['black'],['pink']],sizes:['XS','S','M','L'],img:IMG.women_tee,desc:'تی‌شرت کراپ.',fabric:'پنبه',tryOn:true}),
+  makeProduct({id:'w3',name:'جین مام‌فیت آبی',gender:'women',cat:'شلوار و جین',price:1990000,offColors:[['blue'],['navy']],sizes:['S','M','L','XL'],img:IMG.women_jeans,desc:'جین مام‌فیت.',fabric:'پنبه',tryOn:true}),
+  makeProduct({id:'w4',name:'دامن پلیسه میدی',gender:'women',cat:'دامن',price:1450000,offColors:[['black'],['beige']],sizes:['XS','S','M','L'],img:IMG.women_skirt,desc:'دامن پلیسه.',fabric:'پلی‌استر',tryOn:true}),
+  makeProduct({id:'w5',name:'پیراهن مجلسی مشکی',gender:'women',cat:'پیراهن و لباس مجلسی',price:3890000,offColors:[['black'],['red']],sizes:['XS','S','M','L'],img:IMG.women_dress,desc:'پیراهن مجلسی ای‌لاین.',fabric:'کرپ',tryOn:true,new:true}),
+  makeProduct({id:'w6',name:'مانتو بلند کرم',gender:'women',cat:'کت و مانتو',price:2790000,offColors:[['cream'],['beige'],['black']],sizes:['S','M','L','XL'],img:IMG.women_coat,desc:'مانتو بلند.',fabric:'کتانی',tryOn:true}),
+  makeProduct({id:'w7',name:'کیف دوشی چرم',gender:'women',cat:'کیف و اکسسوری',price:2290000,offColors:[['brown'],['black']],sizes:['FREE'],img:IMG.women_bag,desc:'کیف دوشی.',fabric:'چرم مصنوعی',tryOn:false}),
+  makeProduct({id:'w8',name:'کفش پاشنه بلوک',gender:'women',cat:'کفش',price:2190000,offColors:[['black'],['cream']],sizes:['36','37','38','39','40'],img:IMG.women_shoes,desc:'کفش پاشنه بلوک.',fabric:'چرم مصنوعی',tryOn:true}),
+  makeProduct({id:'w9',name:'شومیز ابریشمی',gender:'women',cat:'بلوز و شومیز',price:1890000,offColors:[['pink'],['cream'],['navy']],sizes:['XS','S','M','L'],img:IMG.women_blouse,desc:'شومیز ابریشمی.',fabric:'ابریشم',tryOn:true}),
+  makeProduct({id:'w10',name:'تی‌شرت اورسایز',gender:'women',cat:'تی‌شرت',price:890000,offColors:[['white'],['gray'],['black']],sizes:['S','M','L','XL'],img:IMG.women_tee,desc:'تی‌شرت اورسایز.',fabric:'پنبه',tryOn:true}),
+  makeProduct({id:'w11',name:'دامن چرمی مشکی',gender:'women',cat:'دامن',price:1790000,offColors:[['black'],['brown']],sizes:['XS','S','M','L'],img:IMG.women_skirt,desc:'دامن چرمی.',fabric:'چرم مصنوعی',tryOn:true}),
+  makeProduct({id:'w12',name:'پیراهن نخی تابستانی',gender:'women',cat:'پیراهن و لباس مجلسی',price:1690000,offColors:[['cream'],['pink']],sizes:['S','M','L'],img:IMG.women_dress,desc:'پیراهن نخی.',fabric:'پنبه',tryOn:true})
+];
+
+(function applyOverrides(){
+  for(const id in AppState.productOverrides){
+    const p = ProductCatalog.find(x=>x.id===id);
+    if(p) Object.assign(p, AppState.productOverrides[id]);
+  }
+})();
+
+if(!AppState.posts.length){
+  AppState.posts = [
+    {id:uid(),title:'راهنمای انتخاب کت و شلوار مردانه',excerpt:'چگونه کت و شلوار مناسب اندام خود را انتخاب کنیم؟',cover:IMG.blog1,content:'<p>انتخاب کت و شلوار مناسب یکی از مهم‌ترین تصمیم‌های پوشاک مردانه است.</p>',author:'تیم VESTORA',date:'2024-12-01',tag:'راهنمای خرید'},
+    {id:uid(),title:'ترندهای پوشاک پاییز ۱۴۰۴',excerpt:'نگاهی به رنگ‌ها، بافت‌ها و استایل‌های محبوب فصل سرد سال.',cover:IMG.blog2,content:'<p>پاییز امسال شاهد بازگشت رنگ‌های خاکی هستیم.</p>',author:'تیم VESTORA',date:'2024-11-15',tag:'ترند'},
+    {id:uid(),title:'چگونه استایل خود را با اکسسوری کامل کنیم',excerpt:'اکسسوری مناسب می‌تواند یک استایل ساده را به یک ظاهر حرفه‌ای تبدیل کند.',cover:IMG.blog3,content:'<p>ساعت، کمربند، کیف و عینک آفتابی از مهم‌ترین اکسسوری‌ها هستند.</p>',author:'تیم VESTORA',date:'2024-10-20',tag:'استایل'},
+    {id:uid(),title:'پرو مجازی: آینده خرید آنلاین پوشاک',excerpt:'چگونه فناوری سه‌بعدی تجربه خرید پوشاک را متحول کرده است.',cover:IMG.blog4,content:'<p>پرو مجازی با استفاده از مدل‌های سه‌بعدی به مشتریان امکان می‌دهد لباس را قبل از خرید ببینند.</p>',author:'تیم VESTORA',date:'2024-09-05',tag:'فناوری'}
+  ];
+  Storage.set('posts', AppState.posts);
+}
+
+function productById(id){ return ProductCatalog.find(p=>p.id===id); }
+function finalPrice(p){ return p.salePrice ?? p.price; }
+
+const CartManager = {
+  save(){ Storage.set('cart', AppState.cart); updateBadges(); },
+  add(p, size, colorIdx, qty=1){
+    if(p.sizes.length && !size) throw new Error('لطفاً سایز را انتخاب کنید.');
+    if(!size) size = p.sizes[0];
+    if(!p.colors.length) colorIdx=0;
+    if(colorIdx==null||colorIdx<0) throw new Error('لطفاً رنگ را انتخاب کنید.');
+    const key = `${p.id}|${size}|${colorIdx}`;
+    const ex = AppState.cart.find(i=>i.key===key);
+    if(ex) ex.qty += qty;
+    else AppState.cart.push({ key, id:p.id, name:p.name, price:finalPrice(p), size, colorIdx, qty, img:p.images[0] });
+    this.save();
+  },
+  remove(key){ AppState.cart = AppState.cart.filter(i=>i.key!==key); this.save(); },
+  setQty(key, q){ const it=AppState.cart.find(i=>i.key===key); if(it){ it.qty=Math.max(1,Math.min(99,q)); this.save(); } },
+  count(){ return AppState.cart.reduce((s,i)=>s+i.qty,0); },
+  subtotal(){ return AppState.cart.reduce((s,i)=>s+i.price*i.qty,0); },
+  clear(){ AppState.cart=[]; this.save(); }
+};
+
+const WishlistManager = {
+  save(){ Storage.set('wishlist', AppState.wishlist); updateBadges(); },
+  toggle(id){ if(AppState.wishlist.includes(id)) AppState.wishlist=AppState.wishlist.filter(x=>x!==id); else AppState.wishlist.push(id); this.save(); return AppState.wishlist.includes(id); },
+  has(id){ return AppState.wishlist.includes(id); }
+};
+
+const OrderManager = {
+  create(order){
+    order.id = 'ORD-'+Date.now().toString(36).toUpperCase();
+    order.date = new Date().toISOString();
+    order.status = 'در حال پردازش';
+    AppState.orders.unshift(order);
+    Storage.set('orders', AppState.orders);
+    return order;
+  },
+  updateStatus(id, status){
+    const o = AppState.orders.find(x=>x.id===id);
+    if(o){ o.status=status; Storage.set('orders', AppState.orders); }
+  }
+};
+
+const BlogManager = {
+  save(){ Storage.set('posts', AppState.posts); },
+  add(post){ post.id = uid(); post.date = todayISO(); AppState.posts.unshift(post); this.save(); return post; },
+  remove(id){ AppState.posts = AppState.posts.filter(p=>p.id!==id); this.save(); },
+  byId(id){ return AppState.posts.find(p=>p.id===id); }
+};
+
+function updateBadges(){
+  const cb=$('#cartBadge'); if(cb){ cb.dataset.count=CartManager.count(); cb.textContent=CartManager.count()?fmt(CartManager.count()):''; }
+  const wb=$('#wishBadge'); if(wb){ wb.dataset.count=AppState.wishlist.length; wb.textContent=AppState.wishlist.length?fmt(AppState.wishlist.length):''; }
+}
+function toast(msg, type=''){
+  const wrap=$('#toastWrap'); if(!wrap) return;
+  const t=el('div','toast '+(type||''), esc(msg));
+  wrap.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(),320); }, 2200);
+}
+
+const Router = {
+  go(page, opts={}){
+    AppState.page=page;
+    $$('.page').forEach(p=>p.classList.remove('active'));
+    const target=$('#app');
+    target.innerHTML='';
+    const view = Views[page]||Views.home;
+    const node = view(opts);
+    node.classList.add('page','active');
+    target.appendChild(node);
+    window.scrollTo({top:0,behavior:'instant'});
+    $$('.nav-desktop button, .bottom-nav button').forEach(b=>b.classList.toggle('active', b.dataset.nav===page));
+    document.body.dataset.page=page;
+    updateBadges();
+  }
+};
+
+function productCard(p){
+  const off = p.salePrice && p.salePrice < p.price;
+  const disc = off ? Math.round((1-p.salePrice/p.price)*100) : 0;
+  const card = el('article','card-product');
+  card.innerHTML = `
+    <div class="card-media">
+      <img loading="lazy" src="${p.images[0]}" alt="${esc(p.name)}" onerror="this.style.opacity=0">
+      ${p.isNew?'<span class="card-badge new">جدید</span>':''}
+      ${off?`<span class="card-badge">${fmt(disc)}٪</span>`:''}
+      <button class="wish-btn ${WishlistManager.has(p.id)?'active':''}" data-wish="${p.id}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="${WishlistManager.has(p.id)?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9.2C.4 8 2.3 4.3 6 4c2.2-.2 3.8 1 5 2.6C12.2 5 13.8 3.8 16 4c3.7.3 5.6 4 4 7.8-2.5 4.6-10 9.2-10 9.2Z"/></svg>
+      </button>
+      ${p.tryOn?'<span class="tryon-badge">◍ پرو</span>':''}
+    </div>
+    <div class="card-body">
+      <span class="card-cat">${esc(p.category)}</span>
+      <h3 class="card-name">${esc(p.name)}</h3>
+      <div class="card-colors">${p.colors.map(c=>`<span class="dot" style="background:${c}"></span>`).join('')}</div>
+      <div class="card-price">
+        <b>${fmt(finalPrice(p))}</b>
+        ${off?`<s>${fmt(p.price)}</s>`:''}
+      </div>
+    </div>`;
+  card.addEventListener('click', e=>{
+    if(e.target.closest('[data-wish]')) return;
+    Router.go('product',{id:p.id});
+  });
+  card.querySelector('[data-wish]').addEventListener('click', e=>{
+    e.stopPropagation();
+    const on = WishlistManager.toggle(p.id);
+    e.currentTarget.classList.toggle('active', on);
+    e.currentTarget.querySelector('svg').setAttribute('fill', on?'currentColor':'none');
+    toast(on?'به علاقه‌مندی‌ها اضافه شد':'حذف شد', on?'ok':'');
+  });
+  return card;
+}
+
+const Views = {};
+
+Views.home = ()=>{
+  const wrap = el('div');
+  wrap.innerHTML = `
+    <section class="hero">
+      <div class="hero-visual"><div class="hero-orb a"></div><div class="hero-orb b"></div><div class="hero-orb c"></div></div>
+      <div class="floating-card fc-1"><small>مجموعه جدید</small><b>پاییز ۱۴۰۴</b></div>
+      <div class="floating-card fc-2"><small>پرو مجازی</small><b>مانکن واقعی</b></div>
+      <div class="floating-card fc-3"><small>ارسال رایگان</small><b>+۵ میلیون</b></div>
+      <div class="hero-content">
+        <span class="hero-eyebrow">✦ تجربه خرید نسل جدید</span>
+        <h1>پوشاک لوکس،<span>با پرو مجازی</span></h1>
+        <p>لباس‌ها را روی مانکن سه‌بعدی امتحان کنید، رنگ پوست و اندام را تغییر دهید و استایل بسازید.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary" data-nav="men">خرید مردانه</button>
+          <button class="btn btn-gold" data-nav="women">خرید زنانه</button>
+          <button class="btn btn-outline" data-nav="tryon">پرو مجازی</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="section-head"><div><h2>دسته‌بندی‌ها</h2><p>انتخاب سریع</p></div></div>
+      <div class="cat-grid">
+        ${[
+          {g:'men',cat:'پیراهن',img:IMG.men_shirt,label:'پیراهن'},
+          {g:'men',cat:'کت و بلیزر',img:IMG.men_jacket,label:'کت'},
+          {g:'women',cat:'پیراهن و لباس مجلسی',img:IMG.women_dress,label:'لباس مجلسی'},
+          {g:'women',cat:'بلوز و شومیز',img:IMG.women_blouse,label:'بلوز'}
+        ].map(c=>`
+          <div class="cat-card" data-goto-shop="${c.g}" data-cat="${c.cat}">
+            <img loading="lazy" src="${c.img}" alt="${c.label}" onerror="this.style.opacity=0">
+            <span>${c.label}</span>
+          </div>`).join('')}
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="section-head"><div><h2>محصولات جدید</h2><p>تازه‌ترین‌ها</p></div><a class="see-all" data-goto-shop="all">همه ←</a></div>
+      <div class="grid-products" id="homeNew"></div>
+    </section>
+
+    <section class="section container">
+      <div class="tryon-promo">
+        <div class="tryon-promo-text">
+          <span class="hero-eyebrow" style="align-self:flex-start;background:rgba(201,169,106,.15);border-color:rgba(201,169,106,.4);color:var(--gold)">VESTORA 3D STUDIO</span>
+          <h2>استایل خود را <em>زنده</em> امتحان کنید</h2>
+          <p>مانکن سه‌بعدی، تغییر رنگ و اندام، ترکیب چند لباس هم‌زمان.</p>
+          <button class="btn btn-gold" data-nav="tryon">ورود به استودیو →</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="section-head"><div><h2>پرفروش‌ترین‌ها</h2><p>انتخاب مشتریان</p></div><a class="see-all" data-goto-shop="all">همه ←</a></div>
+      <div class="grid-products" id="homePopular"></div>
+    </section>
+
+    <section class="section container">
+      <div class="section-head"><div><h2>مجله VESTORA</h2><p>مقالات استایل</p></div><a class="see-all" data-nav="blog">مجله ←</a></div>
+      <div class="blog-grid" id="homeBlog"></div>
+    </section>
+
+    <section class="section container">
+      <div class="features">
+        <div class="feature"><div class="feature-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7 9 18l-5-5"/></svg></div><div><h4>پرو مجازی</h4><p>لباس را قبل از خرید ببینید.</p></div></div>
+        <div class="feature"><div class="feature-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8Z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div><div><h4>ارسال سریع</h4><p>۲۴ تا ۷۲ ساعته</p></div></div>
+        <div class="feature"><div class="feature-ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 7v6c0 5 4 8 9 9 5-1 9-4 9-9V7Z"/></svg></div><div><h4>ضمانت اصالت</h4><p>کیفیت و بازگشت وجه</p></div></div>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="newsletter">
+        <div><h3>خبرنامه VESTORA</h3><p>کالکشن‌ها و تخفیف‌های ویژه.</p></div>
+        <form id="newsForm"><input type="email" placeholder="ایمیل شما" required aria-label="ایمیل"><button class="btn btn-gold" type="submit">عضویت</button></form>
+      </div>
+    </div>
+    ${footerHTML()}
+  `;
+  const newGrid = wrap.querySelector('#homeNew');
+  ProductCatalog.filter(p=>p.isNew).slice(0,6).forEach(p=>newGrid.appendChild(productCard(p)));
+  const popGrid = wrap.querySelector('#homePopular');
+  [...ProductCatalog].sort((a,b)=>b.popular-a.popular).slice(0,6).forEach(p=>popGrid.appendChild(productCard(p)));
+  const blogGrid = wrap.querySelector('#homeBlog');
+  AppState.posts.slice(0,3).forEach(post=>blogGrid.appendChild(blogCard(post)));
+  wrap.querySelectorAll('[data-goto-shop]').forEach(n=>n.addEventListener('click',e=>{
+    e.preventDefault();
+    const g=n.dataset.gotoShop;
+    AppState.filters={...AppState.filters, gender: g==='all'?[]:[g], cat: n.dataset.cat?[n.dataset.cat]:[]};
+    Router.go('shop');
+  }));
+  wrap.querySelector('#newsForm').addEventListener('submit',e=>{ e.preventDefault(); toast('ثبت شد ✦','ok'); e.target.reset(); });
+  bindNavButtons(wrap);
+  return wrap;
+};
+
+function blogCard(post){
+  const card = el('article','blog-card');
+  card.innerHTML = `
+    <div class="bimg"><img loading="lazy" src="${post.cover}" alt="${esc(post.title)}" onerror="this.style.opacity=0"></div>
+    <div class="bbody">
+      <span class="card-cat">${esc(post.tag||'مقاله')}</span>
+      <h3>${esc(post.title)}</h3>
+      <p>${esc(post.excerpt||'')}</p>
+      <div class="bmeta"><span>${esc(post.author||'VESTORA')}</span><span>·</span><span>${new Date(post.date).toLocaleDateString('fa-IR')}</span></div>
+    </div>`;
+  card.addEventListener('click',()=>Router.go('post',{id:post.id}));
+  return card;
+}
+
+Views.blog = ()=>{
+  const wrap = el('div');
+  wrap.innerHTML = `
+    <div class="container">
+      <div class="breadcrumb"><a data-nav="home">خانه</a> / <span>مجله</span></div>
+      <div class="section-head"><div><h2>مجله VESTORA</h2><p>${fmt(AppState.posts.length)} مقاله</p></div></div>
+      <div class="blog-grid" id="blogGrid"></div>
+    </div>
+    ${footerHTML()}
+  `;
+  const grid = wrap.querySelector('#blogGrid');
+  if(!AppState.posts.length) grid.outerHTML = `<div class="empty-state"><h3>هنوز مقاله‌ای نیست</h3></div>`;
+  else AppState.posts.forEach(p=>grid.appendChild(blogCard(p)));
+  bindNavButtons(wrap);
+  return wrap;
+};
+
+Views.post = ({id})=>{
+  const post = BlogManager.byId(id);
+  if(!post) return Views.blog();
+  const wrap = el('div');
+  wrap.innerHTML = `
+    <div class="container">
+      <div class="breadcrumb"><a data-nav="home">خانه</a> / <a data-nav="blog">مجله</a> / <span>${esc(post.title)}</span></div>
+      <article class="post-view">
+        <div class="pcover"><img src="${post.cover}" alt="${esc(post.title)}" onerror="this.style.opacity=0"></div>
+        <h1>${esc(post.title)}</h1>
+        <div class="pmeta"><span>${esc(post.author||'VESTORA')}</span><span>·</span><span>${new Date(post.date).toLocaleDateString('fa-IR')}</span><span>·</span><span>${esc(post.tag||'مقاله')}</span></div>
+        <div class="pcontent">${post.content||'<p>'+esc(post.excerpt||'')+'</p>'}</div>
+      </article>
+    </div>
+    ${footerHTML()}
+  `;
+  bindNavButtons(wrap);
+  return wrap;
+};
+
+Views.shop = ()=>{
+  const wrap = el('div');
+  const f = AppState.filters;
+  const filtered = filterProducts();
+  wrap.innerHTML = `
+    <div class="container">
+      <div class="breadcrumb"><a data-nav="home">خانه</a> / <span>فروشگاه</span></div>
+      <div class="section-head" style="margin-bottom:4px"><div><h2>فروشگاه</h2><p>${fmt(filtered.length)} محصول</p></div></div>
+      <div class="shop-layout">
+        <aside class="filters desktop" id="shopFilters"></aside>
+        <div>
+          <div class="shop-toolbar">
+            <span class="count">${fmt(filtered.length)} نتیجه</span>
+            <button class="btn btn-outline btn-sm filter-toggle-mobile" id="openFilters">فیلتر</button>
+            <select id="sortSelect" aria-label="مرتب‌سازی">
+              <option value="newest" ${f.sort==='newest'?'selected':''}>جدیدترین</option>
+              <option value="cheap" ${f.sort==='cheap'?'selected':''}>ارزان‌ترین</option>
+              <option value="expensive" ${f.sort==='expensive'?'selected':''}>گران‌ترین</option>
+              <option value="popular" ${f.sort==='popular'?'selected':''}>محبوب‌ترین</option>
+            </select>
+          </div>
+          <div class="grid-products" id="shopGrid"></div>
+        </div>
+      </div>
+    </div>
+    ${footerHTML()}
+  `;
+  const grid = wrap.querySelector('#shopGrid');
+  if(!filtered.length){
+    grid.outerHTML = `<div class="empty-state"><h3>محصولی یافت نشد</h3><p>فیلترها را تغییر دهید.</p><button class="btn btn-primary" style="margin-top:10px" id="clearFilters">پاک کردن فیلترها</button></div>`;
+    wrap.querySelector('#clearFilters').addEventListener('click',()=>{
+      AppState.filters={gender:[],cat:[],colors:[],sizes:[],min:null,max:null,inStock:false,sort:'newest',q:''};
+      Router.go('shop');
+    });
+  } else filtered.forEach(p=>grid.appendChild(productCard(p)));
+
+  buildFilters(wrap.querySelector('#shopFilters'));
+  wrap.querySelector('#sortSelect').addEventListener('change',e=>{ AppState.filters.sort=e.target.value; Router.go('shop'); });
+  wrap.querySelector('#openFilters').addEventListener('click',()=>{
+    const sheet = el('div','sheet bottom open');
+    sheet.innerHTML = `<div class="sheet-head"><h3>فیلترها</h3><button class="icon-btn" data-close>✕</button></div><div class="sheet-body" id="mobileFilterBody"></div>`;
+    document.body.appendChild(sheet);
+    buildFilters(sheet.querySelector('#mobileFilterBody'), ()=>{ sheet.remove(); $('#overlay').classList.remove('open'); Router.go('shop'); });
+    $('#overlay').classList.add('open');
+    const close=()=>{ sheet.classList.remove('open'); $('#overlay').classList.remove('open'); setTimeout(()=>sheet.remove(),320); };
+    sheet.querySelector('[data-close]').addEventListener('click', close);
+    $('#overlay').onclick = close;
+  });
+  bindNavButtons(wrap);
+  return wrap;
+};
+
+function buildFilters(container, onChange){
+  if(!container) return;
+  const f = AppState.filters;
+  container.innerHTML = `
+    <div class="filter-group"><h4>جنسیت</h4>
+      ${['men','women'].map(g=>`<label class="chk"><input type="checkbox" data-gender="${g}" ${f.gender.includes(g)?'checked':''}> ${g==='men'?'مردانه':'زنانه'}</label>`).join('')}
+    </div>
+    <div class="filter-group"><h4>دسته</h4>
+      ${[...new Set(ProductCatalog.map(p=>p.category))].map(c=>`<label class="chk"><input type="checkbox" data-cat="${esc(c)}" ${f.cat.includes(c)?'checked':''}> ${esc(c)}</label>`).join('')}
+    </div>
+    <div class="filter-group"><h4>سایز</h4>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">
+        ${['XS','S','M','L','XL','XXL','36','37','38','39','40','41','42','43','44'].map(s=>`<button class="size-btn" data-size="${s}" style="min-width:34px;padding:5px 8px;font-size:.7rem">${s}</button>`).join('')}
+      </div>
+    </div>
+    <div class="filter-group"><h4>قیمت (تومان)</h4>
+      <div class="price-range"><input type="number" placeholder="از" id="minPrice" value="${f.min??''}" min="0"><input type="number" placeholder="تا" id="maxPrice" value="${f.max??''}" min="0"></div>
+    </div>
+    <div class="filter-group"><label class="chk"><input type="checkbox" id="inStockOnly" ${f.inStock?'checked':''}> فقط موجود</label></div>
+    <button class="btn btn-primary btn-block btn-sm" id="applyFilters" style="margin-top:6px">اعمال</button>
+  `;
+  container.querySelectorAll('[data-gender]').forEach(cb=>cb.addEventListener('change',e=>{
+    const g=e.target.dataset.gender;
+    if(e.target.checked) f.gender.push(g); else f.gender=f.gender.filter(x=>x!==g);
+    if(onChange) onChange(); else Router.go('shop');
+  }));
+  container.querySelectorAll('[data-cat]').forEach(cb=>cb.addEventListener('change',e=>{
+    const c=e.target.dataset.cat;
+    if(e.target.checked) f.cat.push(c); else f.cat=f.cat.filter(x=>x!==c);
+    if(onChange) onChange(); else Router.go('shop');
+  }));
+  container.querySelectorAll('[data-size]').forEach(b=>{
+    b.classList.toggle('active', f.sizes.includes(b.dataset.size));
+    b.addEventListener('click',()=>{
+      const s=b.dataset.size;
+      if(f.sizes.includes(s)) f.sizes=f.sizes.filter(x=>x!==s); else f.sizes.push(s);
+      if(onChange) onChange(); else Router.go('shop');
+    });
+  });
+  container.querySelector('#applyFilters')?.addEventListener('click',()=>{
+    f.min = container.querySelector('#minPrice').value ? Number(container.querySelector('#minPrice').value) : null;
+    f.max = container.querySelector('#maxPrice').value ? Number(container.querySelector('#maxPrice').value) : null;
+    f.inStock = container.querySelector('#inStockOnly').checked;
+    if(onChange) onChange(); else Router.go('shop');
+  });
+}
+
+function filterProducts(){
+  const f = AppState.filters;
+  let list = ProductCatalog.slice();
+  if(f.gender.length) list = list.filter(p=>f.gender.includes(p.gender));
+  if(f.cat.length) list = list.filter(p=>f.cat.includes(p.category));
+  if(f.sizes.length) list = list.filter(p=>p.sizes.some(s=>f.sizes.includes(s)));
+  if(f.min!=null) list = list.filter(p=>finalPrice(p)>=f.min);
+  if(f.max!=null) list = list.filter(p=>finalPrice(p)<=f.max);
+  if(f.inStock) list = list.filter(p=>p.stock>0);
+  if(f.q){
+    const q=f.q.trim().toLowerCase();
+    list = list.filter(p=>p.name.toLowerCase().includes(q)||p.category.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q));
+  }
+  switch(f.sort){
+    case 'cheap': list.sort((a,b)=>finalPrice(a)-finalPrice(b)); break;
+    case 'expensive': list.sort((a,b)=>finalPrice(b)-finalPrice(a)); break;
+    case 'popular': list.sort((a,b)=>b.popular-a.popular); break;
+    default: list.sort((a,b)=> (b.isNew?1:0)-(a.isNew?1:0) || b.popular-a.popular);
+  }
+  return list;
+}
+
+Views.men = ()=>categoryPage('men');
+Views.women = ()=>categoryPage('women');
+function categoryPage(gender){
+  const wrap = el('div');
+  const label = gender==='men'?'مردانه':'زنانه';
+  const cats = CATEGORIES[gender];
+  wrap.innerHTML = `
+    <div class="container">
+      <div class="breadcrumb"><a data-nav="home">خانه</a> / <span>${label}</span></div>
+      <div class="section-head"><div><h2>${label}</h2><p>کالکشن VESTORA</p></div></div>
+      <div style="display:flex;gap:4px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px" id="catTabs">
+        <button class="btn btn-sm ${!AppState.filters.cat.length?'btn-primary':'btn-outline'}" data-cat="">همه</button>
+        ${cats.map(c=>`<button class="btn btn-sm ${AppState.filters.cat.includes(c)?'btn-primary':'btn-outline'}" data-cat="${esc(c)}" style="white-space:nowrap;font-size:.7rem;padding:6px 12px;min-height:32px">${esc(c)}</button>`).join('')}
+      </div>
+      <div class="grid-products" id="catGrid"></div>
+    </div>
+    ${footerHTML()}
+  `;
+  const grid = wrap.querySelector('#catGrid');
+  let list = ProductCatalog.filter(p=>p.gender===gender);
+  if(AppState.filters.cat.length) list = list.filter(p=>AppState.filters.cat.includes(p.category));
+  list.forEach(p=>grid.appendChild(productCard(p)));
+  wrap.querySelectorAll('#catTabs [data-cat]').forEach(b=>b.addEventListener('click',()=>{
+    AppState.filters.cat = b.dataset.cat ? [b.dataset.cat] : [];
+    Router.go(gender);
+  }));
+  bindNavButtons(wrap);
+  return wrap;
+}
+
+Views.product = ({id})=>{
+  const p = productById(id);
+  if(!p) return Views.shop();
+  const wrap = el('div');
+  let selColor = 0, selSize = null, qty = 1;
+  const related = ProductCatalog.filter(x=>x.id!==p.id && x.gender===p.gender).slice(0,4);
+  wrap.innerHTML = `
+    <div class="container">
+      <div class="breadcrumb"><a data-nav="home">خانه</a> / <a data-nav="${p.gender}">${p.gender==='men'?'مردانه':'زنانه'}</a> / <span>${esc(p.name)}</span></div>
+      <div class="pd-layout">
+        <div>
+          <div class="pd-gallery-main"><img id="pdMainImg" src="${p.images[0]}" alt="${esc(p.name)}"></div>
+          <div class="pd-thumbs" id="pdThumbs"></div>
+        </div>
+        <div class="pd-info">
+          <span class="card-cat">${esc(p.category)}</span>
+          <h1>${esc(p.name)}</h1>
+          <div class="pd-meta">
+            <div class="pd-price">${fmt(finalPrice(p))} تومان ${p.salePrice?`<s>${fmt(p.price)}</s>`:''}</div>
+            <span style="font-size:.7rem;color:${p.stock>0?'var(--ok)':'var(--danger)'};font-weight:600">${p.stock>0?'✓ موجود':'ناموجود'}</span>
+          </div>
+          <p class="pd-desc">${esc(p.desc)}</p>
+          <p class="pd-desc"><b>جنس:</b> ${esc(p.fabric)}</p>
+          <div class="opt-label">رنگ: <span id="colorName" style="font-weight:400;color:var(--ink-soft);font-size:.7rem">${p.colorKeys[0]}</span></div>
+          <div class="swatches" id="pdColors">
+            ${p.colors.map((c,i)=>`<button class="swatch ${i===0?'active':''}" style="background:${c}" data-color="${i}"></button>`).join('')}
+          </div>
+          <div class="opt-label">سایز: <button class="see-all" id="sizeGuideBtn" style="font-size:.7rem">راهنما</button></div>
+          <div class="sizes" id="pdSizes">
+            ${p.sizes.map(s=>`<button class="size-btn" data-size="${s}" ${p.stock===0?'disabled':''}>${s}</button>`).join('')}
+          </div>
+          <div class="opt-label">تعداد:</div>
+          <div class="qty" id="pdQty"><button data-q="-1">−</button><span id="pdQtyNum">1</span><button data-q="1">+</button></div>
+          <div class="err-msg" id="pdErr"></div>
+          <div class="pd-actions">
+            <button class="btn btn-primary" id="addToCart">افزودن به سبد</button>
+            <button class="btn btn-outline" id="wishBtn">${WishlistManager.has(p.id)?'♥':'♡'}</button>
+          </div>
+          ${p.tryOn?`<button class="btn btn-gold btn-block" style="margin-top:8px" id="tryOnBtn">◍ امتحان روی مانکن</button>`:''}
+        </div>
+      </div>
+      <section class="section"><div class="section-head"><div><h2>محصولات مرتبط</h2></div></div><div class="grid-products" id="relatedGrid"></div></section>
+    </div>
+    ${footerHTML()}
+  `;
+  const thumbs = wrap.querySelector('#pdThumbs');
+  p.images.forEach((img,i)=>{
+    const im = el('img'); im.src=img; im.alt='تصویر '+(i+1); im.loading='lazy';
+    if(i===0) im.classList.add('active');
+    im.addEventListener('click',()=>{
+      wrap.querySelectorAll('#pdThumbs img').forEach(x=>x.classList.remove('active'));
+      im.classList.add('active');
+      wrap.querySelector('#pdMainImg').src=img;
+    });
+    thumbs.appendChild(im);
+  });
+  wrap.querySelectorAll('[data-color]').forEach(b=>b.addEventListener('click',()=>{
+    selColor = Number(b.dataset.color);
+    wrap.querySelectorAll('#pdColors .swatch').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    wrap.querySelector('#colorName').textContent = p.colorKeys[selColor];
+  }));
+  wrap.querySelectorAll('[data-size]').forEach(b=>b.addEventListener('click',()=>{
+    selSize = b.dataset.size;
+    wrap.querySelectorAll('#pdSizes .size-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    wrap.querySelector('#pdErr').textContent='';
+  }));
+  wrap.querySelectorAll('#pdQty [data-q]').forEach(b=>b.addEventListener('click',()=>{
+    qty = Math.max(1, Math.min(p.stock||1, qty + Number(b.dataset.q)));
+    wrap.querySelector('#pdQtyNum').textContent = qty;
+  }));
+  wrap.querySelector('#addToCart').addEventListener('click',()=>{
+    try{ CartManager.add(p, selSize, selColor, qty); toast('به سبد اضافه شد ✓','ok'); updateBadges(); }
+    catch(err){ wrap.querySelector('#pdErr').textContent = err.message; }
+  });
+  wrap.querySelector('#wishBtn').addEventListener('click',e=>{
+    const on = WishlistManager.toggle(p.id);
+    e.currentTarget.textContent = on?'♥':'♡';
+    toast(on?'به علاقه‌مندی‌ها اضافه شد':'حذف شد', on?'ok':'');
+  });
+  wrap.querySelector('#tryOnBtn')?.addEventListener('click',()=>{
+    AppState.lastTryOn = p.id;
+    Router.go('tryon',{id:p.id});
+  });
+  wrap.querySelector('#sizeGuideBtn').addEventListener('click',()=>{
+    const m = el('div','modal open');
+    m.innerHTML = `<div class="modal-box"><button class="modal-close" data-close>✕</button><h3>راهنمای سایز</h3><table class="size-table"><thead><tr><th>سایز</th><th>سینه</th><th>کمر</th><th>باسن</th></tr></thead><tbody>${p.sizeChart.map(r=>`<tr><td>${r.size}</td><td>${r.chest}</td><td>${r.waist}</td><td>${r.hip}</td></tr>`).join('')}</tbody></table></div>`;
+    document.body.appendChild(m);
+    const close=()=>m.remove();
+    m.querySelector('[data-close]').addEventListener('click',close);
+    m.addEventListener('click',e=>{ if(e.target===m) close(); });
+  });
+  const rg = wrap.querySelector('#relatedGrid');
+  related.forEach(x=>rg.appendChild(productCard(x)));
+  bindNavButtons(wrap);
+  return wrap;
+};
+
+const MODEL_URLS = [
+  'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Soldier.glb',
+  'https://threejs.org/examples/models/gltf/Soldier.glb'
+];
+
+Views.tryon = ({id}={})=>{
+  const wrap = el('div');
+  wrap.style.position='relative';
+  wrap.innerHTML = `
+    <div class="studio" id="studio">
+      <div class="studio-canvas-wrap" id="canvasWrap">
+        <div class="studio-hud">
+          <button class="hud-btn" id="viewFront" title="جلو">◉</button>
+          <button class="hud-btn" id="viewBack" title="پشت">◎</button>
+          <button class="hud-btn" id="viewSide" title="جانبی">◐</button>
+          <button class="hud-btn" id="resetView" title="ریست">↺</button>
+        </div>
+        <div class="studio-hud right">
+          <button class="hud-btn" id="toggleBg" title="پس‌زمینه">◑</button>
+          <button class="hud-btn studio-mobile-toggle" id="openMobilePanel" title="کنترل">☰</button>
+        </div>
+        <div class="zoom-controls">
+          <button class="hud-btn" id="zoomIn">+</button>
+          <button class="hud-btn" id="zoomOut">−</button>
+        </div>
+        <div class="loading-overlay" id="studioLoading"><div class="spinner"></div><p style="font-size:.7rem;color:var(--ink-soft);margin-top:8px" id="loadMsg">بارگذاری…</p></div>
+      </div>
+      <aside class="studio-panel" id="studioPanel"></aside>
+      <div class="studio-mobile-panel" id="studioMobilePanel"></div>
+    </div>
+  `;
+  const canvasWrap = wrap.querySelector('#canvasWrap');
+  const loading = wrap.querySelector('#studioLoading');
+  const loadMsg = wrap.querySelector('#loadMsg');
+  let studio = null;
+
+  const init = async ()=>{
+    try{
+      studio = new HumanViewer(canvasWrap);
+      await studio.loadWithFallback(MODEL_URLS, (msg)=>{ if(loadMsg) loadMsg.textContent = msg; });
+      loading.style.display='none';
+      if(AppState._pendingStyle){
+        const s = AppState._pendingStyle;
+        s.items.forEach(it=>{ const p = productById(it.id); if(p) studio.putOn(p, it.size, it.colorIdx); });
+        AppState._pendingStyle=null;
+      } else if(AppState.lastTryOn){
+        const p = productById(AppState.lastTryOn);
+        if(p && p.tryOn) studio.putOn(p, p.sizes[0]||'M', 0);
+        AppState.lastTryOn=null;
+      }
+      buildStudioPanels(wrap, studio);
+    }catch(e){
+      console.error(e);
+      loading.style.display='none';
+      canvasWrap.insertAdjacentHTML('beforeend', `<div class="webgl-fallback">
+        <b style="font-size:.85rem">بارگذاری مدل ناموفق</b>
+        <p style="font-size:.72rem;color:var(--ink-soft);max-width:260px;line-height:1.6">اتصال یا CDN را بررسی کنید.</p>
+        <button class="btn btn-primary btn-sm" data-nav="shop">رفتن به فروشگاه</button>
+      </div>`);
+      bindNavButtons(wrap);
+    }
+  };
+  setTimeout(init, 30);
+
+  wrap.querySelector('#viewFront')?.addEventListener('click',()=>studio?.view('front'));
+  wrap.querySelector('#viewBack')?.addEventListener('click',()=>studio?.view('back'));
+  wrap.querySelector('#viewSide')?.addEventListener('click',()=>studio?.view('side'));
+  wrap.querySelector('#resetView')?.addEventListener('click',()=>studio?.reset());
+  wrap.querySelector('#toggleBg')?.addEventListener('click',()=>studio?.toggleBg());
+  wrap.querySelector('#openMobilePanel')?.addEventListener('click',()=>{
+    wrap.querySelector('#studioMobilePanel').classList.toggle('open');
+  });
+  wrap.querySelector('#zoomIn')?.addEventListener('click',()=>studio?.zoom(0.8));
+  wrap.querySelector('#zoomOut')?.addEventListener('click',()=>studio?.zoom(1.25));
+  return wrap;
+};
+
+function buildStudioPanels(root, studio){
+  const panel = root.querySelector('#studioPanel');
+  const mob = root.querySelector('#studioMobilePanel');
+  const render = (target)=>{
+    target.innerHTML = `
+      <div class="panel-tabs">
+        <button class="active" data-tab="wardrobe">لباس</button>
+        <button data-tab="body">بدن</button>
+        <button data-tab="skin">ظاهر</button>
+      </div>
+      <div class="panel-content" id="panelContent"></div>
+    `;
+    const content = target.querySelector('#panelContent');
+    target.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{
+      target.querySelectorAll('[data-tab]').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      renderTab(b.dataset.tab, content, studio);
+    }));
+    renderTab('wardrobe', content, studio);
+  };
+  render(panel);
+  if(mob) render(mob);
+}
+function renderTab(tab, content, studio){
+  if(tab==='wardrobe') renderWardrobeTab(content, studio);
+  else if(tab==='body') renderBodyTab(content, studio);
+  else renderSkinTab(content, studio);
+}
+
+function renderWardrobeTab(content, studio){
+  const tryonProducts = ProductCatalog.filter(p=>p.tryOn);
+  const worn = studio.getWorn();
+  content.innerHTML = `
+    <div class="panel-section">
+      <h4>پوشیده‌شده</h4>
+      <div class="worn-list" id="wornList">
+        ${worn.length?worn.map(w=>{
+          const p = productById(w.id);
+          return `<div class="worn-item"><img src="${p.images[0]}" alt=""><div class="wi-info"><b>${esc(p.name)}</b><small>${w.size||'M'}</small></div><button data-remove="${w.key}">حذف</button></div>`;
+        }).join(''):'<p style="font-size:.7rem;color:var(--ink-soft)">هنوز لباسی نیست.</p>'}
+      </div>
+      <div style="display:flex;gap:4px">
+        <button class="btn btn-outline btn-xs" id="clearWorn" style="flex:1">پاک</button>
+        <button class="btn btn-primary btn-xs" id="saveStyle" style="flex:1">ذخیره</button>
+      </div>
+    </div>
+    <div class="panel-section">
+      <h4>انتخاب</h4>
+      <div class="tryon-grid" id="tryonGrid">
+        ${tryonProducts.map(p=>`
+          <div class="tryon-card ${worn.some(w=>w.id===p.id)?'active':''}" data-product="${p.id}">
+            <img src="${p.images[0]}" alt="${esc(p.name)}" loading="lazy"><span>${esc(p.name)}</span>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="panel-section">
+      <div class="cart-summary"><div class="row total"><span>مجموع</span><span>${fmt(worn.reduce((s,w)=>s+finalPrice(productById(w.id)||{price:0}),0))} تومان</span></div></div>
+    </div>
+  `;
+  content.querySelectorAll('#wornList [data-remove]').forEach(b=>b.addEventListener('click',()=>{
+    studio.removeWorn(b.dataset.remove);
+    renderWardrobeTab(content, studio);
+    syncOtherPanel(content, 'wardrobe', studio);
+  }));
+  content.querySelector('#clearWorn').addEventListener('click',()=>{
+    studio.clearWorn(); renderWardrobeTab(content, studio); syncOtherPanel(content, 'wardrobe', studio);
+  });
+  content.querySelector('#saveStyle').addEventListener('click',()=>{
+    if(!studio.getWorn().length){ toast('خالی است','err'); return; }
+    const s = { id:uid(), items:studio.getWorn().map(w=>({id:w.id,size:w.size,colorIdx:w.colorIdx})), date:Date.now() };
+    AppState.styles.push(s); Storage.set('styles', AppState.styles);
+    toast('ذخیره شد ✓','ok');
+  });
+  content.querySelectorAll('[data-product]').forEach(card=>card.addEventListener('click',()=>{
+    const p = productById(card.dataset.product);
+    if(!p) return;
+    studio.putOn(p, p.sizes[0]||'M', 0);
+    renderWardrobeTab(content, studio);
+    syncOtherPanel(content, 'wardrobe', studio);
+  }));
+}
+function syncOtherPanel(currentContent, tab, studio){
+  const isPanel = !!currentContent.closest('.studio-panel');
+  const other = document.querySelector(isPanel?'#studioMobilePanel .panel-content':'#studioPanel .panel-content');
+  if(other && other!==currentContent) renderTab(tab, other, studio);
+}
+
+function renderBodyTab(content, studio){
+  const s = studio.getBodySettings();
+  content.innerHTML = `
+    <div class="panel-section">
+      <h4>فرم بدن</h4>
+      <div class="range-row"><label>قد</label><input type="range" min="0.85" max="1.15" step="0.01" value="${s.heightScale}" data-body="heightScale"><output>${s.heightScale.toFixed(2)}</output></div>
+    </div>
+    <div class="panel-section"><h4>سایز</h4>
+      <div class="sizes">${['XS','S','M','L','XL','XXL'].map(z=>`<button class="size-btn ${s.size===z?'active':''}" data-size="${z}" style="min-width:32px;padding:5px 8px;font-size:.7rem">${z}</button>`).join('')}</div>
+    </div>
+    <div class="panel-section"><h4>جنسیت</h4>
+      <div style="display:flex;gap:4px">
+        <button class="btn btn-xs ${s.gender==='men'?'btn-primary':'btn-outline'}" data-gender="men" style="flex:1">مرد</button>
+        <button class="btn btn-xs ${s.gender==='women'?'btn-primary':'btn-outline'}" data-gender="women" style="flex:1">زن</button>
+      </div>
+    </div>
+  `;
+  content.querySelectorAll('[data-body]').forEach(inp=>inp.addEventListener('input',e=>{
+    const val = Number(e.target.value);
+    studio.setBody('heightScale', val);
+    e.target.nextElementSibling.value = val.toFixed(2);
+  }));
+  content.querySelectorAll('[data-size]').forEach(b=>b.addEventListener('click',()=>{
+    content.querySelectorAll('[data-size]').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    studio.setBody('size', b.dataset.size);
+  }));
+  content.querySelectorAll('[data-gender]').forEach(b=>b.addEventListener('click',()=>{
+    content.querySelectorAll('[data-gender]').forEach(x=>{ x.classList.remove('btn-primary'); x.classList.add('btn-outline'); });
+    b.classList.add('btn-primary'); b.classList.remove('btn-outline');
+    toast('محدود در این نسخه','warn');
+  }));
+}
+
+function renderSkinTab(content, studio){
+  const skins = ['#f3d7c1','#e6bfa5','#d1a17a','#b47b52','#8d5a3a','#5d3a26'];
+  content.innerHTML = `
+    <div class="panel-section"><h4>پوست</h4>
+      <div class="skin-swatches">${skins.map((c,i)=>`<button class="skin-sw ${studio.getSkin()===i?'active':''}" style="background:${c}" data-skin="${i}"></button>`).join('')}</div>
+    </div>
+    <div class="panel-section"><h4>مو</h4>
+      <div class="skin-swatches">${['#1c1a17','#3a2a1e','#6b4b2f','#b08a5c','#e8d3a8'].map((c,i)=>`<button class="skin-sw ${studio.getHair()===i?'active':''}" style="background:${c}" data-hair="${i}"></button>`).join('')}</div>
+    </div>
+  `;
+  content.querySelectorAll('[data-skin]').forEach(b=>b.addEventListener('click',()=>{
+    studio.setSkin(Number(b.dataset.skin));
+    content.querySelectorAll('[data-skin]').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+  }));
+  content.querySelectorAll('[data-hair]').forEach(b=>b.addEventListener('click',()=>{
+    studio.setHair(Number(b.dataset.hair));
+    content.querySelectorAll('[data-hair]').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+  }));
+}
+
+Views.wishlist = ()=>{
+  const wrap = el('div');
+  const items = ProductCatalog.filter(p=>AppState.wishlist.includes(p.id));
+  wrap.innerHTML = `
+    <div class="container">
+      <div class="breadcrumb"><a data-nav="home">خانه</a> / <span>علاقه‌مندی‌ها</span></div>
+      <div class="section-head"><div><h2>علاقه‌مندی‌ها</h2><p>${fmt(items.length)} محصول</p></div></div>
+      <div class="grid-products" id="wishGrid"></div>
+    </div>
+    ${footerHTML()}
+  `;
+  const grid = wrap.querySelector('#wishGrid');
+  if(!items.length){
+    grid.outerHTML = `<div class="empty-state"><h3>خالی است</h3><p>محصولات مورد علاقه را ذخیره کنید.</p><button class="btn btn-primary" style="margin-top:10px" data-nav="shop">مشاهده فروشگاه</button></div>`;
+  } else items.forEach(p=>grid.appendChild(productCard(p)));
+  bindNavButtons(wrap);
+  return wrap;
+};
+
+function openCartSheet(){
+  const sheet = el('div','sheet side');
+  const body = el('div','sheet-body');
+  const foot = el('div','sheet-foot');
+  sheet.innerHTML = `<div class="sheet-head"><h3>سبد خرید (${fmt(CartManager.count())})</h3><button class="icon-btn" data-close>✕</button></div>`;
+  sheet.appendChild(body); sheet.appendChild(foot);
+  document.body.appendChild(sheet);
+  requestAnimationFrame(()=>{ sheet.classList.add('open'); $('#overlay').classList.add('open'); });
+
+  const render = ()=>{
+    const items = AppState.cart;
+    if(!items.length){
+      body.innerHTML = `<div class="empty-state"><h3>سبد خالی است</h3><p>محصولی اضافه کنید.</p></div>`;
+      foot.innerHTML='';
+    } else {
+      body.innerHTML = items.map(it=>`
+        <div class="cart-item">
+          <img src="${it.img}" alt="">
+          <div class="cart-item-info"><b>${esc(it.name)}</b><small>${it.size} · رنگ ${it.colorIdx+1}</small>
+            <div class="qty"><button data-q="-1" data-key="${it.key}">−</button><span>${it.qty}</span><button data-q="1" data-key="${it.key}">+</button></div>
+          </div>
+          <div class="price-col"><b>${fmt(it.price*it.qty)}</b><button class="rm" data-rm="${it.key}">حذف</button></div>
+        </div>`).join('');
+      const ship = CartManager.subtotal()>=5000000?0:250000;
+      foot.innerHTML = `
+        <div class="cart-summary">
+          <div class="row"><span>جمع</span><span>${fmt(CartManager.subtotal())}</span></div>
+          <div class="row"><span>ارسال</span><span>${ship?'۲۵۰,۰۰۰':'رایگان'}</span></div>
+          <div class="row total"><span>نهایی</span><span>${fmt(CartManager.subtotal()+ship)}</span></div>
+          <button class="btn btn-primary btn-block" id="goCheckout" style="margin-top:8px">تسویه‌حساب</button>
+          <button class="btn btn-outline btn-block" id="keepShopping" style="margin-top:5px">ادامه خرید</button>
+        </div>`;
+      foot.querySelector('#goCheckout').addEventListener('click',()=>{ close(); Router.go('checkout'); });
+      foot.querySelector('#keepShopping').addEventListener('click',()=>{ close(); Router.go('shop'); });
+    }
+    body.querySelectorAll('[data-q]').forEach(b=>b.addEventListener('click',()=>{
+      const it = AppState.cart.find(i=>i.key===b.dataset.key);
+      if(it){ CartManager.setQty(it.key, it.qty+Number(b.dataset.q)); render(); }
+    }));
+    body.querySelectorAll('[data-rm]').forEach(b=>b.addEventListener('click',()=>{ CartManager.remove(b.dataset.rm); render(); }));
+  };
+  render();
+  const close = ()=>{ sheet.classList.remove('open'); $('#overlay').classList.remove('open'); setTimeout(()=>sheet.remove(),320); };
+  sheet.querySelector('[data-close]').addEventListener('click',close);
+  $('#overlay').onclick = close;
+}
+
+Views.checkout = ()=>{
+  const wrap = el('div');
+  const subtotal = CartManager.subtotal();
+  const shipping = subtotal>=5000000?0:250000;
+  wrap.innerHTML = `
+    <div class="container">
+      <div class="breadcrumb"><a data-nav="home">خانه</a> / <span>تسویه‌حساب</span></div>
+      <div class="section-head"><div><h2>تسویه‌حساب</h2><p>جریان آزمایشی</p></div></div>
+      <div class="co-layout">
+        <form id="checkoutForm" novalidate>
+          <div class="form-card">
+            <h3>اطلاعات مشتری</h3>
+            <div class="field-row">
+              <div class="field"><label>نام *</label><input name="fname" required><span class="err">الزامی</span></div>
+              <div class="field"><label>نام خانوادگی *</label><input name="lname" required><span class="err">الزامی</span></div>
+            </div>
+            <div class="field"><label>ایمیل *</label><input name="email" type="email" required><span class="err">ایمیل معتبر</span></div>
+            <div class="field"><label>تلفن *</label><input name="phone" required pattern="[0-9]{10,11}"><span class="err">تلفن معتبر</span></div>
+          </div>
+          <div class="form-card">
+            <h3>آدرس</h3>
+            <div class="field"><label>استان *</label><input name="province" required><span class="err">الزامی</span></div>
+            <div class="field"><label>شهر *</label><input name="city" required><span class="err">الزامی</span></div>
+            <div class="field"><label>آدرس *</label><textarea name="address" rows="2" required></textarea><span class="err">الزامی</span></div>
+            <div class="field"><label>کد پستی *</label><input name="postal" required pattern="[0-9]{10}"><span class="err">کد ۱۰ رقمی</span></div>
+          </div>
+          <div class="form-card">
+            <h3>ارسال</h3>
+            <label class="ship-opt"><input type="radio" name="ship" value="standard" checked> استاندارد — ${shipping?fmt(shipping)+' تومان':'رایگان'}</label>
+            <label class="ship-opt"><input type="radio" name="ship" value="express"> سریع — ${fmt(450000)} تومان</label>
+          </div>
+          <button class="btn btn-primary btn-block" type="submit">ثبت سفارش آزمایشی</button>
+        </form>
+        <aside class="order-summary">
+          <div class="form-card">
+            <h3>خلاصه</h3>
+            ${AppState.cart.length?AppState.cart.map(it=>`<div class="cart-summary" style="margin-bottom:4px"><div class="row"><span>${esc(it.name)} × ${it.qty}</span><span>${fmt(it.price*it.qty)}</span></div></div>`).join(''):'<p style="font-size:.72rem;color:var(--ink-soft)">سبد خالی است.</p>'}
+            <div class="cart-summary" style="margin-top:8px">
+              <div class="row"><span>جمع</span><span>${fmt(subtotal)}</span></div>
+              <div class="row"><span>ارسال</span><span>${shipping?fmt(shipping):'رایگان'}</span></div>
+              <div class="row total"><span>نهایی</span><span>${fmt(subtotal+shipping)}</span></div>
+            </div>
+            <p style="font-size:.6rem;color:var(--warn);margin-top:6px;background:rgba(192,122,42,.1);padding:5px 7px;border-radius:5px">⚠️ این تسویه‌حساب آزمایشی است.</p>
+          </div>
+        </aside>
+      </div>
+    </div>
+    ${footerHTML()}
+  `;
+  const form = wrap.querySelector('#checkoutForm');
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    let valid = true;
+    form.querySelectorAll('[required]').forEach(inp=>{
+      const field = inp.closest('.field');
+      const ok = inp.checkValidity() && inp.value.trim()!=='';
+      field?.classList.toggle('has-error', !ok);
+      if(!ok) valid=false;
+    });
+    if(!valid){ toast('فیلدها را تکمیل کنید','err'); return; }
+    if(!AppState.cart.length){ toast('سبد خالی است','err'); return; }
+    const fd = new FormData(form);
+    const order = {
+      customer: { name: fd.get('fname')+' '+fd.get('lname'), email:fd.get('email'), phone:fd.get('phone') },
+      address: { province:fd.get('province'), city:fd.get('city'), address:fd.get('address'), postal:fd.get('postal') },
+      ship: fd.get('ship'),
+      items: AppState.cart.map(i=>({...i})),
+      total: subtotal + (fd.get('ship')==='express'?450000:shipping)
+    };
+    const saved = OrderManager.create(order);
+    CartManager.clear();
+    showOrderConfirm(wrap, saved.total, saved.id);
+  });
+  bindNavButtons(wrap);
+  return wrap;
+};
+
+function showOrderConfirm(root, total, orderId){
+  const m = el('div','modal open');
+  m.innerHTML = `<div class="modal-box" style="text-align:center">
+    <div style="width:52px;height:52px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;margin:0 auto 12px;font-size:1.4rem">✓</div>
+    <h3>ثبت شد</h3>
+    <p style="color:var(--ink-soft);font-size:.75rem;margin:6px 0">شماره: <b>${orderId}</b></p>
+    <p style="color:var(--ink-soft);font-size:.75rem;margin-bottom:12px">مبلغ: <b>${fmt(total)} تومان</b></p>
+    <button class="btn btn-primary btn-block" data-close>بازگشت</button>
+  </div>`;
+  document.body.appendChild(m);
+  m.querySelector('[data-close]').addEventListener('click',()=>{ m.remove(); Router.go('home'); });
+}
+
+Views.account = ()=>{
+  const wrap = el('div');
+  if(!AppState.account){
+    wrap.innerHTML = `
+      <div class="container">
+        <div class="auth-card">
+          <h2>ورود نمایشی</h2>
+          <p class="sub">داده‌ها محلی</p>
+          <form id="loginForm">
+            <div class="field"><label>ایمیل</label><input type="email" name="email" required placeholder="you@example.com"></div>
+            <div class="field"><label>رمز</label><input type="password" name="pass" required placeholder="••••••"></div>
+            <button class="btn btn-primary btn-block" type="submit">ورود / ثبت‌نام</button>
+          </form>
+          <p class="auth-switch">ادمین: <button type="button" id="goAdmin">داشبورد ادمین</button></p>
+        </div>
+      </div>
+      ${footerHTML()}`;
+    wrap.querySelector('#loginForm').addEventListener('submit',e=>{
+      e.preventDefault();
+      const fd=new FormData(e.target);
+      AppState.account={email:fd.get('email'), name:fd.get('email').split('@')[0], joined: todayISO()};
+      Storage.set('account', AppState.account);
+      toast('خوش آمدید ✦','ok');
+      Router.go('account');
+    });
+    wrap.querySelector('#goAdmin').addEventListener('click',()=>Router.go('admin'));
+    bindNavButtons(wrap);
+    return wrap;
+  }
+
+  const tab = AppState._accTab || 'overview';
+  const tabs = [
+    {k:'overview',t:'نمای کلی',ico:'📊'},
+    {k:'orders',t:'سفارش‌ها',ico:'📦'},
+    {k:'wishlist',t:'علاقه‌مندی',ico:'♥'},
+    {k:'styles',t:'استایل',ico:'◍'},
+    {k:'settings',t:'تنظیمات',ico:'⚙'}
+  ];
+  wrap.innerHTML = `
+    <div class="container">
+      <div class="breadcrumb"><a data-nav="home">خانه</a> / <span>داشبورد من</span></div>
+      <div class="section-head">
+        <div><h2>سلام، ${esc(AppState.account.name)}</h2><p style="font-size:.72rem">${esc(AppState.account.email)}</p></div>
+        <button class="btn btn-outline btn-sm" id="logout">خروج</button>
+      </div>
+      <div class="dash">
+        <aside class="dash-nav">
+          ${tabs.map(t=>`<button class="${tab===t.k?'active':''}" data-acc-tab="${t.k}"><span>${t.ico}</span>${t.t}</button>`).join('')}
+        </aside>
+        <div class="dash-content" id="accContent"></div>
+      </div>
+    </div>
+    ${footerHTML()}`;
+  const content = wrap.querySelector('#accContent');
+  const renderTab = (k)=>{
+    if(k==='overview'){
+      content.innerHTML = `
+        <div class="stat-grid">
+          <div class="stat"><div class="ico">📦</div><b>${fmt(AppState.orders.length)}</b><small>سفارش</small></div>
+          <div class="stat"><div class="ico">♥</div><b>${fmt(AppState.wishlist.length)}</b><small>علاقه‌مندی</small></div>
+          <div class="stat"><div class="ico">◍</div><b>${fmt(AppState.styles.length)}</b><small>استایل</small></div>
+          <div class="stat"><div class="ico">🛒</div><b>${fmt(CartManager.count())}</b><small>سبد</small></div>
+        </div>
+        <div class="panel-card">
+          <h3>آخرین سفارش‌ها</h3>
+          ${AppState.orders.length?`<div class="table-scroll"><table class="data-table">
+            <thead><tr><th>شماره</th><th>تاریخ</th><th>مبلغ</th><th>وضعیت</th></tr></thead>
+            <tbody>${AppState.orders.slice(0,5).map(o=>`<tr>
+              <td><b>${o.id}</b></td>
+              <td>${new Date(o.date).toLocaleDateString('fa-IR')}</td>
+              <td>${fmt(o.total)}</td>
+              <td><span class="status-pill ${o.status==='تحویل شده'?'ok':o.status==='لغو شده'?'bad':'warn'}">${esc(o.status)}</span></td>
+            </tr>`).join('')}</tbody>
+          </table></div>`:'<p style="font-size:.72rem;color:var(--ink-soft)">هنوز سفارشی نیست.</p>'}
+        </div>`;
+    } else if(k==='orders'){
+      content.innerHTML = `<div class="panel-card"><h3>همه سفارش‌ها</h3>
+        ${AppState.orders.length?`<div class="table-scroll"><table class="data-table">
+          <thead><tr><th>شماره</th><th>تاریخ</th><th>مبلغ</th><th>وضعیت</th></tr></thead>
+          <tbody>${AppState.orders.map(o=>`<tr>
+            <td><b>${o.id}</b></td>
+            <td>${new Date(o.date).toLocaleDateString('fa-IR')}</td>
+            <td>${fmt(o.total)}</td>
+            <td><span class="status-pill ${o.status==='تحویل شده'?'ok':o.status==='لغو شده'?'bad':'warn'}">${esc(o.status)}</span></td>
+          </tr>`).join('')}</tbody>
+        </table></div>`:'<p style="font-size:.72rem;color:var(--ink-soft)">هنوز سفارشی نیست.</p>'}</div>`;
+    } else if(k==='wishlist'){
+      content.innerHTML = `<div class="panel-card"><h3>علاقه‌مندی‌ها (${fmt(AppState.wishlist.length)})</h3>
+        ${AppState.wishlist.length?`<div class="grid-products" id="dashWish"></div>`:'<p style="font-size:.72rem;color:var(--ink-soft)">خالی است.</p>'}</div>`;
+      const g = content.querySelector('#dashWish');
+      if(g) AppState.wishlist.forEach(id=>{ const p=productById(id); if(p) g.appendChild(productCard(p)); });
+    } else if(k==='styles'){
+      content.innerHTML = `<div class="panel-card"><h3>استایل‌های ذخیره‌شده</h3>
+        ${AppState.styles.length?AppState.styles.map(s=>`
+          <div style="padding:6px 0;border-bottom:1px solid var(--line);font-size:.74rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <b>${s.id.slice(0,4)}</b>
+            <span style="color:var(--ink-soft)">${s.items.length} آیتم</span>
+            <button class="btn btn-outline btn-xs" style="margin-inline-start:auto" data-load-style="${s.id}">بارگذاری</button>
+            <button class="btn btn-danger btn-xs" data-del-style="${s.id}">حذف</button>
+          </div>`).join(''):'<p style="font-size:.72rem;color:var(--ink-soft)">هنوز استایلی نیست.</p>'}</div>`;
+      content.querySelectorAll('[data-load-style]').forEach(b=>b.addEventListener('click',()=>{
+        const s = AppState.styles.find(x=>x.id===b.dataset.loadStyle);
+        if(s){ AppState._pendingStyle=s; Router.go('tryon'); }
+      }));
+      content.querySelectorAll('[data-del-style]').forEach(b=>b.addEventListener('click',()=>{
+        AppState.styles = AppState.styles.filter(x=>x.id!==b.dataset.delStyle);
+        Storage.set('styles', AppState.styles);
+        toast('حذف شد'); renderTab('styles');
+      }));
+    } else if(k==='settings'){
+      content.innerHTML = `<div class="panel-card">
+        <h3>تنظیمات</h3>
+        <div class="field"><label>ایمیل</label><input value="${esc(AppState.account.email)}" disabled></div>
+        <div class="field"><label>نام</label><input id="setName" value="${esc(AppState.account.name)}"></div>
+        <button class="btn btn-primary" id="saveSettings">ذخیره</button>
+        <hr style="border:none;border-top:1px solid var(--line);margin:10px 0">
+        <h3 style="color:var(--danger);font-size:.78rem">منطقه خطر</h3>
+        <button class="btn btn-danger btn-sm" id="clearAll">پاک کردن همه</button>
+      </div>`;
+      content.querySelector('#saveSettings').addEventListener('click',()=>{
+        AppState.account.name = content.querySelector('#setName').value.trim() || AppState.account.name;
+        Storage.set('account', AppState.account);
+        toast('ذخیره شد ✓','ok');
+      });
+      content.querySelector('#clearAll').addEventListener('click',()=>{
+        if(!confirm('همه داده‌ها پاک شوند؟')) return;
+        ['cart','wishlist','styles','orders','posts','productOverrides','account','admin'].forEach(k=>Storage.remove(k));
+        AppState.cart=[]; AppState.wishlist=[]; AppState.styles=[]; AppState.orders=[]; AppState.account=null;
+        toast('پاک شد'); Router.go('home');
+      });
+    }
+  };
+  renderTab(tab);
+  wrap.querySelectorAll('[data-acc-tab]').forEach(b=>b.addEventListener('click',()=>{
+    AppState._accTab = b.dataset.accTab;
+    wrap.querySelectorAll('[data-acc-tab]').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    renderTab(b.dataset.accTab);
+  }));
+  wrap.querySelector('#logout').addEventListener('click',()=>{
+    AppState.account=null; Storage.remove('account'); toast('خارج شدید'); Router.go('account');
+  });
+  bindNavButtons(wrap);
+  return wrap;
+};
+
+Views.admin = ()=>{
+  const wrap = el('div');
+  const tab = AppState._adminTab || 'overview';
+  const tabs = [
+    {k:'overview',t:'نمای کلی',ico:'📊'},
+    {k:'products',t:'محصولات',ico:'👕'},
+    {k:'orders',t:'سفارش',ico:'📦'},
+    {k:'posts',t:'پست',ico:'📝'},
+    {k:'customers',t:'مشتری',ico:'👥'}
+  ];
+  const stats = {
+    products: ProductCatalog.length,
+    lowStock: ProductCatalog.filter(p=>p.stock>0 && p.stock<=5).length,
+    totalOrders: AppState.orders.length,
+    revenue: AppState.orders.reduce((s,o)=>s+o.total,0)
+  };
+  wrap.innerHTML = `
+    <div class="container">
+      <div class="breadcrumb"><a data-nav="home">خانه</a> / <span>مدیریت</span></div>
+      <div class="section-head">
+        <div><h2>داشبورد</h2><p style="font-size:.72rem">داده محلی</p></div>
+        <button class="btn btn-outline btn-sm" id="adminLogout">خروج</button>
+      </div>
+      <div class="stat-grid">
+        <div class="stat"><div class="ico">📦</div><b>${fmt(stats.products)}</b><small>محصولات</small></div>
+        <div class="stat"><div class="ico">⚠️</div><b>${fmt(stats.lowStock)}</b><small>کم</small></div>
+        <div class="stat"><div class="ico">🛒</div><b>${fmt(stats.totalOrders)}</b><small>سفارش</small></div>
+        <div class="stat"><div class="ico">💰</div><b>${fmt(stats.revenue)}</b><small>درآمد</small></div>
+      </div>
+      <div class="dash">
+        <aside class="dash-nav">
+          ${tabs.map(t=>`<button class="${tab===t.k?'active':''}" data-admin-tab="${t.k}"><span>${t.ico}</span>${t.t}</button>`).join('')}
+        </aside>
+        <div class="dash-content" id="adminContent"></div>
+      </div>
+    </div>
+    ${footerHTML()}
+  `;
+  const content = wrap.querySelector('#adminContent');
+  const renderTab = (k)=>{
+    if(k==='overview'){
+      content.innerHTML = `
+        <div class="panel-card"><h3>فروش</h3><p style="font-size:.76rem;color:var(--ink-soft)">درآمد: <b style="color:var(--accent)">${fmt(stats.revenue)} تومان</b></p></div>
+        <div class="panel-card"><h3>محصولات کم موجود</h3>
+          ${ProductCatalog.filter(p=>p.stock<=5).length?`<div class="table-scroll"><table class="data-table">
+            <thead><tr><th>محصول</th><th>موجودی</th><th>وضعیت</th></tr></thead>
+            <tbody>${ProductCatalog.filter(p=>p.stock<=5).map(p=>`<tr><td>${esc(p.name)}</td><td>${fmt(p.stock)}</td><td><span class="status-pill ${p.stock===0?'bad':'warn'}">${p.stock===0?'ناموجود':'کم'}</span></td></tr>`).join('')}</tbody>
+          </table></div>`:'<p style="font-size:.72rem;color:var(--ink-soft)">همه موجود.</p>'}
+        </div>`;
+    } else if(k==='products'){
+      content.innerHTML = `
+        <div class="panel-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:5px;margin-bottom:8px">
+            <h3 style="margin:0">محصولات</h3>
+            <button class="btn btn-gold btn-sm" id="newProductBtn">+ جدید</button>
+          </div>
+          <input type="search" id="adminSearch" placeholder="جست‌وجو…" style="width:100%;padding:6px 10px;border:1.5px solid var(--line);border-radius:6px;font-size:.74rem;background:var(--bg);margin-bottom:6px">
+          <div class="table-scroll"><table class="data-table" id="adminProductsTable"><thead><tr><th>نام</th><th>قیمت</th><th>موجودی</th><th>عملیات</th></tr></thead><tbody></tbody></table></div>
+        </div>`;
+      const tbody = content.querySelector('#adminProductsTable tbody');
+      const renderTable = (q='')=>{
+        tbody.innerHTML='';
+        const list = ProductCatalog.filter(p=>!q || p.name.includes(q) || p.category.includes(q));
+        list.forEach(p=>{
+          const tr = el('tr');
+          tr.innerHTML = `
+            <td><b style="font-size:.7rem">${esc(p.name)}</b></td>
+            <td>${fmt(finalPrice(p))}</td>
+            <td><span class="status-pill ${p.stock===0?'bad':p.stock<=5?'warn':'ok'}">${fmt(p.stock)}</span></td>
+            <td style="display:flex;gap:2px;flex-wrap:wrap">
+              <button class="btn btn-outline btn-xs" data-edit-product="${p.id}">✎</button>
+              <button class="btn btn-outline btn-xs" data-edit-stock="${p.id}">📦</button>
+              <button class="btn btn-danger btn-xs" data-del-product="${p.id}">✕</button>
+            </td>`;
+          tbody.appendChild(tr);
+        });
+        tbody.querySelectorAll('[data-edit-product]').forEach(b=>b.addEventListener('click',()=>openProductEditor(b.dataset.editProduct, ()=>renderTab('products'))));
+        tbody.querySelectorAll('[data-edit-stock]').forEach(b=>b.addEventListener('click',()=>{
+          const p = productById(b.dataset.editStock);
+          const val = prompt(`موجودی برای «${p.name}»:`, p.stock);
+          if(val!=null && !isNaN(Number(val))){
+            p.stock = Math.max(0, Number(val));
+            AppState.productOverrides[p.id] = {...(AppState.productOverrides[p.id]||{}), stock:p.stock};
+            Storage.set('productOverrides', AppState.productOverrides);
+            toast('به‌روزرسانی شد ✓','ok');
+            renderTab('products');
+          }
+        }));
+        tbody.querySelectorAll('[data-del-product]').forEach(b=>b.addEventListener('click',()=>{
+          if(!confirm('حذف شود؟')) return;
+          const id = b.dataset.delProduct;
+          const idx = ProductCatalog.findIndex(x=>x.id===id);
+          if(idx>-1){
+            ProductCatalog.splice(idx,1);
+            AppState.productOverrides[id] = {__deleted:true};
+            Storage.set('productOverrides', AppState.productOverrides);
+            toast('حذف شد'); renderTab('products');
+          }
+        }));
+      };
+      renderTable();
+      content.querySelector('#adminSearch').addEventListener('input', debounce(e=>renderTable(e.target.value), 200));
+      content.querySelector('#newProductBtn').addEventListener('click',()=>openProductEditor(null, ()=>renderTab('products')));
+    } else if(k==='orders'){
+      content.innerHTML = `<div class="panel-card"><h3>سفارش‌ها</h3>
+        ${AppState.orders.length?`<div class="table-scroll"><table class="data-table">
+          <thead><tr><th>شماره</th><th>مشتری</th><th>مبلغ</th><th>وضعیت</th></tr></thead>
+          <tbody>${AppState.orders.map(o=>`<tr>
+            <td><b>${o.id}</b></td><td>${esc(o.customer?.name||'—')}</td><td>${fmt(o.total)}</td>
+            <td><select data-order-status="${o.id}" style="font-size:.6rem;padding:3px 5px;border-radius:4px;border:1px solid var(--line);background:var(--bg)">
+              <option ${o.status==='در حال پردازش'?'selected':''}>در حال پردازش</option>
+              <option ${o.status==='ارسال شده'?'selected':''}>ارسال شده</option>
+              <option ${o.status==='تحویل شده'?'selected':''}>تحویل شده</option>
+              <option ${o.status==='لغو شده'?'selected':''}>لغو شده</option>
+            </select></td>
+          </tr>`).join('')}</tbody>
+        </table></div>`:'<p style="font-size:.72rem;color:var(--ink-soft)">سفارشی نیست.</p>'}</div>`;
+      content.querySelectorAll('[data-order-status]').forEach(sel=>sel.addEventListener('change',()=>{
+        OrderManager.updateStatus(sel.dataset.orderStatus, sel.value);
+        toast('به‌روزرسانی ✓','ok');
+      }));
+    } else if(k==='posts'){
+      content.innerHTML = `
+        <div class="panel-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:5px;margin-bottom:8px">
+            <h3 style="margin:0">پست‌ها (${fmt(AppState.posts.length)})</h3>
+            <button class="btn btn-primary btn-sm" id="newPostBtn">+ جدید</button>
+          </div>
+          <div id="adminPostsList"></div>
+        </div>`;
+      const listEl = content.querySelector('#adminPostsList');
+      const renderPosts = ()=>{
+        if(!AppState.posts.length){ listEl.innerHTML = '<p style="font-size:.72rem;color:var(--ink-soft)">پستی نیست.</p>'; return; }
+        listEl.innerHTML = AppState.posts.map(p=>`
+          <div style="display:flex;gap:6px;padding:6px 0;border-bottom:1px solid var(--line);align-items:center;flex-wrap:wrap">
+            <img src="${p.cover}" style="width:40px;height:30px;object-fit:cover;border-radius:4px" onerror="this.style.opacity=0">
+            <div style="flex:1;min-width:80px"><b style="font-size:.72rem;display:block">${esc(p.title)}</b></div>
+            <button class="btn btn-outline btn-xs" data-edit-post="${p.id}">✎</button>
+            <button class="btn btn-danger btn-xs" data-del-post="${p.id}">✕</button>
+          </div>`).join('');
+        listEl.querySelectorAll('[data-del-post]').forEach(b=>b.addEventListener('click',()=>{
+          if(!confirm('حذف؟')) return;
+          BlogManager.remove(b.dataset.delPost);
+          toast('حذف شد'); renderPosts();
+        }));
+        listEl.querySelectorAll('[data-edit-post]').forEach(b=>b.addEventListener('click',()=>openPostEditor(b.dataset.editPost, renderPosts)));
+      };
+      renderPosts();
+      content.querySelector('#newPostBtn').addEventListener('click',()=>openPostEditor(null, renderPosts));
+    } else if(k==='customers'){
+      const customers = {};
+      AppState.orders.forEach(o=>{
+        const key = o.customer?.email || 'unknown';
+        if(!customers[key]) customers[key] = {name:o.customer?.name||'—', email:key, count:0, total:0};
+        customers[key].count++; customers[key].total += o.total;
+      });
+      const list = Object.values(customers);
+      content.innerHTML = `<div class="panel-card"><h3>مشتریان (${fmt(list.length)})</h3>
+        ${list.length?`<div class="table-scroll"><table class="data-table">
+          <thead><tr><th>نام</th><th>ایمیل</th><th>سفارش</th><th>مجموع</th></tr></thead>
+          <tbody>${list.map(c=>`<tr><td><b>${esc(c.name)}</b></td><td style="font-size:.66rem">${esc(c.email)}</td><td>${fmt(c.count)}</td><td>${fmt(c.total)}</td></tr>`).join('')}</tbody>
+        </table></div>`:'<p style="font-size:.72rem;color:var(--ink-soft)">مشتری نیست.</p>'}</div>`;
+    }
+  };
+  renderTab(tab);
+  wrap.querySelectorAll('[data-admin-tab]').forEach(b=>b.addEventListener('click',()=>{
+    AppState._adminTab = b.dataset.adminTab;
+    wrap.querySelectorAll('[data-admin-tab]').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    renderTab(b.dataset.adminTab);
+  }));
+  wrap.querySelector('#adminLogout').addEventListener('click',()=>Router.go('home'));
+  bindNavButtons(wrap);
+  return wrap;
+};
+
+function openPostEditor(postId, onSave){
+  const post = postId ? BlogManager.byId(postId) : null;
+  const m = el('div','modal open');
+  m.innerHTML = `<div class="modal-box" style="max-width:560px">
+    <button class="modal-close" data-close>✕</button>
+    <h3>${post?'ویرایش':'پست جدید'}</h3>
+    <div class="field"><label>عنوان *</label><input id="postTitle" value="${esc(post?.title||'')}"></div>
+    <div class="field"><label>لینک تصویر</label><input id="postCover" value="${esc(post?.cover||IMG.blog1)}"></div>
+    <div class="field"><label>برچسب</label><input id="postTag" value="${esc(post?.tag||'مقاله')}"></div>
+    <div class="field"><label>نویسنده</label><input id="postAuthor" value="${esc(post?.author||'تیم VESTORA')}"></div>
+    <div class="field"><label>خلاصه</label><textarea id="postExcerpt" rows="2">${esc(post?.excerpt||'')}</textarea></div>
+    <div class="field"><label>متن (HTML)</label><textarea id="postContent" rows="5">${esc(post?.content||'')}</textarea></div>
+    <button class="btn btn-primary btn-block" id="savePost">${post?'ذخیره':'انتشار'}</button>
+  </div>`;
+  document.body.appendChild(m);
+  const close=()=>m.remove();
+  m.querySelector('[data-close]').addEventListener('click',close);
+  m.addEventListener('click',e=>{ if(e.target===m) close(); });
+  m.querySelector('#savePost').addEventListener('click',()=>{
+    const title = m.querySelector('#postTitle').value.trim();
+    if(!title){ toast('عنوان الزامی است','err'); return; }
+    const data = {
+      title, cover: m.querySelector('#postCover').value.trim() || IMG.blog1,
+      tag: m.querySelector('#postTag').value.trim() || 'مقاله',
+      author: m.querySelector('#postAuthor').value.trim() || 'تیم VESTORA',
+      excerpt: m.querySelector('#postExcerpt').value.trim(),
+      content: m.querySelector('#postContent').value.trim()
+    };
+    if(post){ Object.assign(post, data); BlogManager.save(); toast('به‌روزرسانی ✓','ok'); }
+    else { BlogManager.add(data); toast('منتشر شد ✓','ok'); }
+    close();
+    if(onSave) onSave();
+  });
+}
+
+function openProductEditor(productId, onSave){
+  const existing = productId ? productById(productId) : null;
+  const m = el('div','modal open');
+  m.innerHTML = `<div class="modal-box" style="max-width:560px">
+    <button class="modal-close" data-close>✕</button>
+    <h3>${existing?'ویرایش':'محصول جدید'}</h3>
+    <div class="field"><label>نام *</label><input id="pName" value="${esc(existing?.name||'')}"></div>
+    <div class="field-row">
+      <div class="field"><label>جنسیت</label>
+        <select id="pGender"><option value="men" ${existing?.gender==='men'?'selected':''}>مرد</option><option value="women" ${existing?.gender==='women'?'selected':''}>زن</option></select>
+      </div>
+      <div class="field"><label>دسته *</label><input id="pCat" value="${esc(existing?.category||'')}"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>قیمت *</label><input id="pPrice" type="number" value="${existing?.price||''}"></div>
+      <div class="field"><label>موجودی</label><input id="pStock" type="number" value="${existing?.stock??12}"></div>
+    </div>
+    <div class="field"><label>تصویر *</label><input id="pImg" value="${esc(existing?.images?.[0]||'')}"></div>
+    <div class="field"><label>رنگ‌ها (با کاما)</label><input id="pColors" value="${esc((existing?.colorKeys||['black']).join(','))}"></div>
+    <div class="field"><label>سایزها (با کاما)</label><input id="pSizes" value="${esc((existing?.sizes||['S','M','L']).join(','))}"></div>
+    <div class="field"><label>جنس</label><input id="pFabric" value="${esc(existing?.fabric||'')}"></div>
+    <div class="field"><label>توضیح</label><textarea id="pDesc" rows="2">${esc(existing?.desc||'')}</textarea></div>
+    <div class="field"><label><input type="checkbox" id="pTryOn" ${existing?.tryOn?'checked':''}> پرو مجازی</label></div>
+    <button class="btn btn-primary btn-block" id="saveProduct">${existing?'ذخیره':'افزودن'}</button>
+  </div>`;
+  document.body.appendChild(m);
+  const close=()=>m.remove();
+  m.querySelector('[data-close]').addEventListener('click',close);
+  m.addEventListener('click',e=>{ if(e.target===m) close(); });
+  m.querySelector('#saveProduct').addEventListener('click',()=>{
+    const name = m.querySelector('#pName').value.trim();
+    const cat = m.querySelector('#pCat').value.trim();
+    const price = Number(m.querySelector('#pPrice').value);
+    const img = m.querySelector('#pImg').value.trim();
+    if(!name || !cat || !price || !img){ toast('فیلدهای الزامی را پر کنید','err'); return; }
+    const colorKeys = m.querySelector('#pColors').value.split(',').map(s=>s.trim()).filter(Boolean);
+    const sizes = m.querySelector('#pSizes').value.split(',').map(s=>s.trim()).filter(Boolean);
+    const data = {
+      name, gender: m.querySelector('#pGender').value,
+      category: cat, price,
+      colors: colorKeys.map(k=>COLORS[k]||'#888'), colorKeys,
+      sizes, images: [img],
+      stock: Number(m.querySelector('#pStock').value) || 0,
+      fabric: m.querySelector('#pFabric').value.trim() || 'نامشخص',
+      desc: m.querySelector('#pDesc').value.trim(),
+      tryOn: m.querySelector('#pTryOn').checked,
+      sizeChart
+    };
+    if(existing){ Object.assign(existing, data); toast('به‌روزرسانی ✓','ok'); }
+    else {
+      const id = 'custom-'+uid();
+      ProductCatalog.unshift({ id, ...data, salePrice:null, isNew:true, popular:Math.random(), modelId:null });
+      toast('اضافه شد ✓','ok');
+    }
+    close();
+    if(onSave) onSave();
+  });
+}
+
+const INFO = {
+  about:{title:'درباره ما',lead:'VESTORA 3D — تجربه‌ای مدرن.',body:`<p>فروشگاه نمایشی پوشاک.</p>`},
+  contact:{title:'تماس',lead:'پشتیبانی',body:`<p>support@vestora3d.demo</p>`},
+  sizeguide:{title:'راهنمای سایز',lead:'سایز مناسب',body:`<table class="size-table"><thead><tr><th>سایز</th><th>سینه</th><th>کمر</th><th>باسن</th></tr></thead><tbody>${sizeChart.map(r=>`<tr><td>${r.size}</td><td>${r.chest}</td><td>${r.waist}</td><td>${r.hip}</td></tr>`).join('')}</tbody></table>`},
+  shipping:{title:'راهنمای خرید',lead:'از انتخاب تا تحویل',body:`<p>پرداخت و ارسال واقعی نیست.</p>`},
+  faq:{title:'پرسش‌ها',lead:'پاسخ رایج',body:`<details class="accordion"><summary>آیا پرو مجازی دقیق است؟</summary><p>مدل GLB آماده three.js.</p></details>`},
+  terms:{title:'قوانین',lead:'شرایط',body:`<p>پروژه نمایشی.</p>`},
+  privacy:{title:'حریم خصوصی',lead:'داده‌ها',body:`<p>همه محلی.</p>`},
+  returns:{title:'مرجوعی',lead:'بازگشت',body:`<p>مرجوعی واقعی نیست.</p>`},
+  orderstatus:{title:'وضعیت سفارش',lead:'پیگیری',body:`<p>بک‌اند ندارد.</p>`}
+};
+function infoPage(key){
+  const data = INFO[key] || INFO.about;
+  const wrap = el('div');
+  wrap.innerHTML = `<div class="container info-page prose"><h1>${data.title}</h1><p class="lead">${data.lead}</p>${data.body}</div>${footerHTML()}`;
+  bindNavButtons(wrap);
+  return wrap;
+}
+Views.about=()=>infoPage('about');
+Views.contact=()=>infoPage('contact');
+Views.sizeguide=()=>infoPage('sizeguide');
+Views.shipping=()=>infoPage('shipping');
+Views.faq=()=>infoPage('faq');
+Views.terms=()=>infoPage('terms');
+Views.privacy=()=>infoPage('privacy');
+Views.returns=()=>infoPage('returns');
+Views.orderstatus=()=>infoPage('orderstatus');
+
+function footerHTML(){
+  return `
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="logo" data-nav="home"><span class="logo-mark">V</span><span>VESTORA<small>3D STUDIO</small></span></a>
+          <p>فروشگاه پوشاک لوکس با پرو مجازی.</p>
+          <div class="socials"><a href="#">IG</a><a href="#">TG</a><a href="#">WA</a></div>
+        </div>
+        <div><h5>فروشگاه</h5><ul>
+          <li><a data-nav="men">مردانه</a></li><li><a data-nav="women">زنانه</a></li><li><a data-nav="shop">همه</a></li><li><a data-nav="blog">مجله</a></li><li><a data-nav="tryon">پرو</a></li>
+        </ul></div>
+        <div><h5>اطلاعات</h5><ul>
+          <li><a data-info="about">درباره</a></li><li><a data-info="contact">تماس</a></li><li><a data-info="sizeguide">سایز</a></li><li><a data-info="faq">پرسش</a></li>
+        </ul></div>
+        <div><h5>قوانین</h5><ul>
+          <li><a data-info="terms">شرایط</a></li><li><a data-info="privacy">حریم</a></li><li><a data-info="returns">مرجوعی</a></li><li><a data-info="orderstatus">سفارش</a></li>
+        </ul></div>
+      </div>
+      <div class="footer-bottom">© ${new Date().getFullYear()} VESTORA 3D — MVP</div>
+    </div>
+  </footer>`;
+}
+
+function bindNavButtons(root){
+  root.querySelectorAll('[data-nav]').forEach(n=>{
+    if(n.dataset.navBound) return;
+    n.dataset.navBound='1';
+    n.addEventListener('click',e=>{
+      e.preventDefault();
+      const target=n.dataset.nav;
+      if(target==='tryon') Router.go('tryon');
+      else if(target==='men'||target==='women'){ AppState.filters.cat=[]; Router.go(target); }
+      else Router.go(target);
+    });
+  });
+  root.querySelectorAll('[data-info]').forEach(n=>{
+    if(n.dataset.infoBound) return;
+    n.dataset.infoBound='1';
+    n.addEventListener('click',e=>{ e.preventDefault(); Router.go(n.dataset.info); });
+  });
+}
+
+class HumanViewer{
+  constructor(container){
+    this.container = container;
+    this.worn = [];
+    this.settings = { heightScale:1.0, size:'M', gender:'women' };
+    this.skinIdx = 1;
+    this.hairIdx = 1;
+    this.bgIdx = 0;
+    this.autoRotate = false;
+    this._ready = false;
+    this._initScene();
+  }
+
+  _initScene(){
+    const w = this.container.clientWidth || 300;
+    const h = this.container.clientHeight || 400;
+
+    this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color(0xe8e1d5);
+
+    this.camera = new THREE.PerspectiveCamera(28, w/h, 0.05, 500);
+    this.camera.position.set(0, 1.0, 6.0);
+    this.baseCameraPos = new THREE.Vector3(0, 1.0, 6.0);
+    this.baseTarget = new THREE.Vector3(0, 0.95, 0);
+
+    this.renderer = new THREE.WebGLRenderer({antialias:true, powerPreference:'high-performance'});
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setSize(w,h);
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.05;
+    this.container.appendChild(this.renderer.domElement);
+
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls.enableDamping = true;
+    this.controls.dampingFactor = 0.06;
+    this.controls.target.set(0, 0.95, 0);
+    this.controls.minDistance = 0.3;
+    this.controls.maxDistance = 30.0;
+    this.controls.maxPolarAngle = Math.PI * 0.95;
+    this.controls.minPolarAngle = 0.02;
+    this.controls.enableZoom = true;
+    this.controls.zoomSpeed = 1.5;
+    this.controls.enablePan = false;
+    this.controls.update();
+
+    this.scene.add(new THREE.HemisphereLight(0xfff6e8, 0x8a7a62, 1.1));
+
+    const key = new THREE.DirectionalLight(0xfff2dd, 2.0);
+    key.position.set(2.0, 3.5, 2.5);
+    key.castShadow = true;
+    key.shadow.mapSize.set(1024,1024);
+    key.shadow.camera.left=-2; key.shadow.camera.right=2;
+    key.shadow.camera.top=3; key.shadow.camera.bottom=-1;
+    key.shadow.bias = -0.0005;
+    this.scene.add(key);
+
+    const fill = new THREE.DirectionalLight(0xcfd8ff, 0.55);
+    fill.position.set(-2.5, 2.0, 1.2);
+    this.scene.add(fill);
+
+    const rim = new THREE.DirectionalLight(0xffe0b0, 0.7);
+    rim.position.set(-1.0, 2.5, -2.5);
+    this.scene.add(rim);
+
+    const floorGeo = new THREE.CircleGeometry(3.5, 64);
+    const floorMat = new THREE.MeshStandardMaterial({color:0xd8cfc1, roughness:0.95, metalness:0});
+    this.floor = new THREE.Mesh(floorGeo, floorMat);
+    this.floor.rotation.x = -Math.PI/2;
+    this.floor.position.y = 0.001;
+    this.floor.receiveShadow = true;
+    this.scene.add(this.floor);
+
+    this._animate = this._animate.bind(this);
+    this._animate();
+
+    this._onResize = debounce(()=>this._resize(), 150);
+    window.addEventListener('resize', this._onResize);
+  }
+
+  loadWithFallback(urls, onProgress){
+    return new Promise((resolve, reject)=>{
+      const loader = new GLTFLoader();
+      let idx = 0;
+      const attempt = ()=>{
+        if(idx >= urls.length){
+          reject(new Error('All URLs failed.'));
+          return;
+        }
+        const url = urls[idx++];
+        if(onProgress) onProgress(`تلاش ${idx}/${urls.length}…`);
+        loader.load(
+          url,
+          (gltf)=>{
+            try{
+              this.model = gltf.scene;
+              this.model.position.y = 0;
+              this.model.traverse(obj=>{
+                if(obj.isMesh){
+                  obj.castShadow = true;
+                  obj.receiveShadow = true;
+                  if(obj.material) obj.material.envMapIntensity = 1.0;
+                }
+              });
+              const box = new THREE.Box3().setFromObject(this.model);
+              const size = box.getSize(new THREE.Vector3());
+              if(size.y > 0){
+                const s = 1.75 / size.y;
+                this.model.scale.setScalar(s);
+              }
+              box.setFromObject(this.model);
+              const center = box.getCenter(new THREE.Vector3());
+              this.model.position.x = -center.x;
+              this.model.position.z = -center.z;
+              this.model.position.y = -box.min.y;
+              this.scene.add(this.model);
+
+              this.skinMaterials = [];
+              this.hairMaterials = [];
+              this.model.traverse(obj=>{
+                if(obj.isMesh && obj.material){
+                  const name = (obj.material.name||'').toLowerCase();
+                  const meshName = (obj.name||'').toLowerCase();
+                  if(name.includes('skin') || meshName.includes('body') || meshName.includes('head')){
+                    this.skinMaterials.push(obj.material);
+                  }
+                  if(name.includes('hair') || meshName.includes('hair')){
+                    this.hairMaterials.push(obj.material);
+                  }
+                }
+              });
+              this._applySkinColor();
+              this._applyHairColor();
+              this._fitCameraToModel();
+              this._ready = true;
+              if(onProgress) onProgress('بارگذاری شد');
+              resolve();
+            }catch(err){ reject(err); }
+          },
+          (xhr)=>{
+            if(onProgress && xhr.total){
+              const pct = Math.round(xhr.loaded/xhr.total*100);
+              onProgress(`بارگذاری ${pct}%`);
+            }
+          },
+          (err)=>{
+            console.warn(`Failed ${url}:`, err);
+            attempt();
+          }
+        );
+      };
+      attempt();
+    });
+  }
+
+  _fitCameraToModel(){
+    if(!this.model) return;
+    const box = new THREE.Box3().setFromObject(this.model);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const height = size.y || 1.75;
+    this.controls.target.set(0, center.y, 0);
+    const dist = height * 4.0;
+    this.camera.position.set(0, center.y, dist);
+    this.camera.lookAt(this.controls.target);
+    this.baseCameraPos = this.camera.position.clone();
+    this.baseTarget = this.controls.target.clone();
+    this.controls.minDistance = Math.max(0.3, dist * 0.3);
+    this.controls.maxDistance = dist * 2.5;
+    this.controls.update();
+  }
+
+  _animate(){
+    requestAnimationFrame(this._animate);
+    if(this.autoRotate && this.model) this.model.rotation.y += 0.005;
+    this.controls.update();
+    this.renderer.render(this.scene, this.camera);
+  }
+
+  _resize(){
+    const w = this.container.clientWidth, h = this.container.clientHeight;
+    if(!w||!h) return;
+    this.camera.aspect = w/h; this.camera.updateProjectionMatrix();
+    this.renderer.setSize(w,h);
+  }
+
+  _applySkinColor(){
+    const colors = [0xf3d7c1,0xe6bfa5,0xd1a17a,0xb47b52,0x8d5a3a,0x5d3a26];
+    const col = new THREE.Color(colors[this.skinIdx] ?? colors[0]);
+    this.skinMaterials?.forEach(m=>{ if(m.color) m.color.copy(col); });
+  }
+  _applyHairColor(){
+    const colors = [0x1c1a17,0x3a2a1e,0x6b4b2f,0xb08a5c,0xe8d3a8];
+    const col = new THREE.Color(colors[this.hairIdx] ?? colors[0]);
+    this.hairMaterials?.forEach(m=>{ if(m.color) m.color.copy(col); });
+  }
+
+  putOn(product, size='M', colorIdx=0){
+    const key = product.id + '|' + size + '|' + colorIdx;
+    const sameCat = this.worn.filter(w=>{
+      const p = productById(w.id);
+      return p && p.category === product.category;
+    });
+    sameCat.forEach(w=>this.removeWorn(w.key));
+    this.worn.push({key, id:product.id, size, colorIdx, category:product.category});
+    this._applyClothes();
+  }
+  removeWorn(key){ this.worn = this.worn.filter(w=>w.key!==key); this._applyClothes(); }
+  clearWorn(){ this.worn=[]; this._applyClothes(); }
+  getWorn(){ return this.worn.slice(); }
+
+  _applyClothes(){
+    if(!this.model) return;
+    if(this.clothesGroup){
+      this.model.remove(this.clothesGroup);
+      this.clothesGroup.traverse(n=>{ if(n.geometry) n.geometry.dispose?.(); if(n.material && !n.material.__shared) n.material.dispose?.(); });
+    }
+    this.clothesGroup = new THREE.Group();
+    this.model.add(this.clothesGroup);
+
+    const box = new THREE.Box3().setFromObject(this.model);
+    const height = box.max.y - box.min.y;
+    const feetY = box.min.y;
+    const headY = box.max.y;
+    const bodyWidth = box.max.x - box.min.x;
+    const bodyDepth = box.max.z - box.min.z;
+    const bodyCenterX = (box.max.x + box.min.x) / 2;
+    const bodyCenterZ = (box.max.z + box.min.z) / 2;
+
+    const shoulderY = headY - height * 0.16;
+    const waistY = headY - height * 0.40;
+    const hipY = headY - height * 0.50;
+    const kneeY = feetY + height * 0.28;
+    const ankleY = feetY + height * 0.05;
+
+    const bodyR = Math.max(bodyWidth, bodyDepth) * 0.5;
+    const wrapR = bodyR * 0.85;
+
+    this.worn.forEach(w=>{
+      const p = productById(w.id);
+      if(!p) return;
+      const col = p.colors[w.colorIdx||0] || '#888';
+      const mat = new THREE.MeshStandardMaterial({
+        color:new THREE.Color(col), roughness:.75, metalness:.02, side:THREE.DoubleSide
+      });
+      mat.__shared = false;
+
+      const cat = p.category;
+      const isTop = ['تی‌شرت و پولوشرت','پیراهن','بلوز و شومیز','تی‌شرت','کت و بلیزر','کت و مانتو','لباس رسمی'].includes(cat);
+      const isBottom = ['شلوار','جین','شلوار و جین','دامن'].includes(cat);
+      const isDress = ['پیراهن و لباس مجلسی'].includes(cat);
+      const isShoe = ['کفش'].includes(cat);
+      const isAcc = ['اکسسوری','کیف و اکسسوری'].includes(cat);
+
+      if(isTop || isDress){
+        const topY = shoulderY + height * 0.02;
+        const bottomY = isDress ? (kneeY + height * 0.05) : (waistY + height * 0.02);
+        const topHeight = topY - bottomY;
+        const geo = new THREE.CylinderGeometry(wrapR * 1.02, wrapR * 0.85, topHeight, 32, 1, true);
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(bodyCenterX, (topY + bottomY) / 2, bodyCenterZ);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        this.clothesGroup.add(mesh);
+        if(!isDress && isTop){
+          const sleeveLen = height * 0.10;
+          for(const s of [-1,1]){
+            const sleeveGeo = new THREE.CylinderGeometry(wrapR * 0.32, wrapR * 0.28, sleeveLen, 16, 1, true);
+            const sm = new THREE.Mesh(sleeveGeo, mat);
+            sm.position.set(bodyCenterX + s * (wrapR * 1.05), topY - sleeveLen * 0.5, bodyCenterZ);
+            sm.rotation.z = s * 0.15;
+            sm.castShadow = true;
+            this.clothesGroup.add(sm);
+          }
+        }
+      }
+      if(isBottom && !isDress){
+        const topY = hipY + height * 0.02;
+        const bottomY = cat === 'دامن' ? (kneeY + height * 0.02) : (ankleY + height * 0.02);
+        const botHeight = topY - bottomY;
+        const geo = new THREE.CylinderGeometry(wrapR * 0.95, wrapR * (cat === 'دامن' ? 1.3 : 0.75), botHeight, 28, 1, true);
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(bodyCenterX, (topY + bottomY) / 2, bodyCenterZ);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        this.clothesGroup.add(mesh);
+        if(cat !== 'دامن'){
+          const legTop = hipY;
+          const legBottom = ankleY;
+          const legHeight = legTop - legBottom;
+          const legOffset = wrapR * 0.45;
+          for(const s of [-1,1]){
+            const legGeo = new THREE.CylinderGeometry(wrapR * 0.38, wrapR * 0.20, legHeight, 16, 1, true);
+            const lm = new THREE.Mesh(legGeo, mat);
+            lm.position.set(bodyCenterX + s * legOffset, (legTop + legBottom) / 2, bodyCenterZ);
+            lm.castShadow = true;
+            this.clothesGroup.add(lm);
+          }
+        }
+      }
+      if(isShoe){
+        for(const s of [-1,1]){
+          const shoeGeo = new THREE.BoxGeometry(wrapR * 0.42, height * 0.035, wrapR * 0.85);
+          const sm = new THREE.Mesh(shoeGeo, mat);
+          sm.position.set(bodyCenterX + s * (wrapR * 0.42), feetY + height * 0.02, bodyCenterZ + wrapR * 0.2);
+          sm.castShadow = true;
+          this.clothesGroup.add(sm);
+        }
+      }
+      if(isAcc){
+        const ringGeo = new THREE.TorusGeometry(wrapR * 0.55, height * 0.005, 8, 32);
+        const rm = new THREE.Mesh(ringGeo, mat);
+        rm.position.set(bodyCenterX, shoulderY - height * 0.03, bodyCenterZ + bodyDepth * 0.05);
+        rm.rotation.x = Math.PI / 2;
+        this.clothesGroup.add(rm);
+      }
+    });
+  }
+
+  setSkin(idx){ this.skinIdx = idx; this._applySkinColor(); }
+  getSkin(){ return this.skinIdx; }
+  setHair(idx){ this.hairIdx = idx; this._applyHairColor(); }
+  getHair(){ return this.hairIdx; }
+  setBody(key, val){
+    if(key==='heightScale'){
+      this.settings.heightScale = val;
+      if(this.model){
+        if(!this._baseScale) this._baseScale = this.model.scale.x;
+        this.model.scale.setScalar(this._baseScale * val);
+      }
+      return;
+    }
+    this.settings[key] = val;
+  }
+  getBodySettings(){ return {...this.settings}; }
+
+  view(dir){
+    if(!this.model) return;
+    const box = new THREE.Box3().setFromObject(this.model);
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+    const height = size.y || 1.75;
+    const dist = height * 4.0;
+    this.controls.target.set(0, center.y, 0);
+    if(dir==='front') this.camera.position.set(0, center.y, dist);
+    if(dir==='back') this.camera.position.set(0, center.y, -dist);
+    if(dir==='side') this.camera.position.set(dist, center.y, 0);
+    this.camera.lookAt(this.controls.target);
+    this.controls.update();
+  }
+  reset(){
+    if(this.baseTarget){
+      this.camera.position.copy(this.baseCameraPos);
+      this.controls.target.copy(this.baseTarget);
+    } else {
+      this.camera.position.set(0, 1.0, 6.0);
+      this.controls.target.set(0, 0.95, 0);
+    }
+    this.controls.update();
+  }
+  zoom(factor){
+    const dir = new THREE.Vector3().subVectors(this.camera.position, this.controls.target);
+    const dist = dir.length();
+    const newDist = Math.max(this.controls.minDistance, Math.min(this.controls.maxDistance, dist * factor));
+    dir.setLength(newDist);
+    this.camera.position.copy(this.controls.target).add(dir);
+    this.controls.update();
+  }
+  toggleAutoRotate(){ this.autoRotate = !this.autoRotate; return this.autoRotate; }
+  toggleBg(){
+    const bgs = [0xe8e1d5, 0x181512, 0x25201a, 0x2b3440];
+    this.bgIdx = (this.bgIdx+1) % bgs.length;
+    this.scene.background = new THREE.Color(bgs[this.bgIdx]);
+    if(this.floor) this.floor.material.color.setHex(this.bgIdx===0?0xd8cfc1:0x2a2520);
+  }
+}
+
+function boot(){
+  document.documentElement.dataset.theme = AppState.theme;
+  updateBadges();
+
+  $$('[data-nav]').forEach(n=>{
+    if(n.closest('#app')) return;
+    n.addEventListener('click',e=>{
+      e.preventDefault();
+      const t=n.dataset.nav;
+      if(t==='tryon') Router.go('tryon');
+      else if(t==='men'||t==='women'){ AppState.filters.cat=[]; Router.go(t); }
+      else Router.go(t);
+    });
+  });
+
+  $('#cartBtn').addEventListener('click', openCartSheet);
+  $('#wishlistBtn')?.addEventListener('click',()=>Router.go('wishlist'));
+
+  $('#themeToggle').addEventListener('click',()=>{
+    AppState.theme = AppState.theme==='light'?'dark':'light';
+    Storage.set('theme', AppState.theme);
+    document.documentElement.dataset.theme = AppState.theme;
+  });
+
+  const searchInput = $('#headerSearch');
+  searchInput?.addEventListener('input', debounce(e=>{
+    AppState.filters.q = e.target.value;
+    if(AppState.page!=='shop') Router.go('shop');
+    else {
+      const grid = $('#shopGrid');
+      if(grid){
+        const list = filterProducts();
+        grid.innerHTML='';
+        list.forEach(p=>grid.appendChild(productCard(p)));
+        const c = $('#shopGrid')?.closest('.shop-layout')?.querySelector('.count');
+        if(c) c.textContent = fmt(list.length)+' نتیجه';
+      }
+    }
+  }, 250));
+
+  $('#mobileSearchBtn')?.addEventListener('click',()=>{
+    const sheet = el('div','sheet bottom');
+    sheet.innerHTML = `<div class="sheet-head"><h3>جست‌وجو</h3><button class="icon-btn" data-close>✕</button></div>
+      <div class="sheet-body"><input type="search" id="mobileSearchInput" placeholder="نام محصول…" style="width:100%;padding:11px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:16px" autofocus></div>`;
+    document.body.appendChild(sheet);
+    requestAnimationFrame(()=>{ sheet.classList.add('open'); $('#overlay').classList.add('open'); });
+    const close=()=>{ sheet.classList.remove('open'); $('#overlay').classList.remove('open'); setTimeout(()=>sheet.remove(),320); };
+    sheet.querySelector('[data-close]').addEventListener('click',close);
+    $('#overlay').onclick = close;
+    const input = sheet.querySelector('#mobileSearchInput');
+    input.addEventListener('keydown',e=>{
+      if(e.key==='Enter'){ AppState.filters.q = input.value; close(); Router.go('shop'); }
+    });
+  });
+
+  Router.go('home');
+}
+
+document.addEventListener('DOMContentLoaded', boot);
+window.VESTORA = { AppState, ProductCatalog, CartManager, WishlistManager, OrderManager, BlogManager, Router, HumanViewer };
+</script>
+</body>
+</html>
